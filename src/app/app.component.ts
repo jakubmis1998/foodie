@@ -11,6 +11,7 @@ export class AppComponent implements OnInit {
   mode: boolean;
 
   ngOnInit(): void {
+    console.log(environment.production);
     this.mode = environment.production;
   }
 }

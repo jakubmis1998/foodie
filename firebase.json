@@ -2,21 +2,12 @@
   "hosting": [
     {
       "public": "dist/foodie",
+      "target": "foodie",
       "ignore": [
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
       ],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    },
-    {
-      "target": "foodie",
-      "source": ".",
       "frameworksBackend": {}
     }
   ]

@@ -1,12 +1,12 @@
 {
   "projects": {
-    "default": "foodie-73b0e"
+    "default": "foodie-268d1"
   },
   "targets": {
-    "foodie-73b0e": {
+    "foodie-268d1": {
       "hosting": {
         "foodie": [
-          "foodie-73b0e"
+          "foodie-268d1"
         ]
       }
     }

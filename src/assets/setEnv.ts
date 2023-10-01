@@ -25,13 +25,11 @@ const envDirectory = './src/environments';
 // creates the `environments` directory if it does not exist
 if (!existsSync(envDirectory)) {
   mkdirSync(envDirectory);
-  writeFileUsingFS('./src/environments/environment.prod.ts', '');
-  writeFileUsingFS('./src/environments/environment.ts', '');
 }
 
 //creates the `environment.prod.ts` and `environment.ts` file if it does not exist
-// writeFileUsingFS('./src/environments/environment.prod.ts', '');
-// writeFileUsingFS('./src/environments/environment.ts', '');
+writeFileUsingFS('./src/environments/environment.prod.ts', '');
+writeFileUsingFS('./src/environments/environment.ts', '');
 
 // Checks whether command line argument of `prod` was provided signifying production mode
 const isProduction = environment === 'prod';
