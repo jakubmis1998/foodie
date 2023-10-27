@@ -51,6 +51,9 @@ const environmentFileContent = `
       apiKey: '${process.env.API_KEY}',
       authDomain: '${process.env.AUTH_DOMAIN}',
       messagingSenderId: '${process.env.MESSAGING_SENDER_ID}'
+    },
+    google: {
+      clientId: '${process.env.GOOGLE_CLIENT_ID}'
     }
   };
 `;

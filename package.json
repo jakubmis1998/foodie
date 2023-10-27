@@ -6,6 +6,7 @@
     "config": "ts-node ./src/assets/setEnv.ts",
     "start": "npm run config -- --environment=dev && ng serve",
     "build": "npm run config -- --environment=prod && ng build --configuration production",
+    "deploy": "npm run build && firebase deploy",
     "test": "ng test"
   },
   "private": true,
@@ -19,7 +20,7 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
-    "firebase-tools": "^12.6.1",
+    "firebase": "^10.5.2",
     "rxfire": "^6.0.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
