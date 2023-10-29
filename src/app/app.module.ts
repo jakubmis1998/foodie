@@ -14,6 +14,7 @@ import {
   SocialAuthServiceConfig,
   SocialLoginModule
 } from '@abacritt/angularx-social-login';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -29,24 +30,27 @@ import {
     LoginModule,
     DashboardModule
   ],
-  providers: [{
-    provide: 'SocialAuthServiceConfig',
-    useValue: {
-      autoLogin: false,
-      providers: [
-        {
-          id: GoogleLoginProvider.PROVIDER_ID,
-          provider: new GoogleLoginProvider(environment.google.clientId, {
-            oneTapEnabled: false, // default is true
-            scopes: 'https://www.googleapis.com/auth/photoslibrary.readonly'
-          } as GoogleInitOptions)
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(environment.google.clientId, {
+              oneTapEnabled: false, // default is true
+              scopes: 'https://www.googleapis.com/auth/photoslibrary.readonly'
+            } as GoogleInitOptions)
+          }
+        ],
+        onError: (err) => {
+          console.error(err);
         }
-      ],
-      onError: (err) => {
-        console.error(err);
-      }
-    } as SocialAuthServiceConfig
-  }],
+      } as SocialAuthServiceConfig
+    },
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

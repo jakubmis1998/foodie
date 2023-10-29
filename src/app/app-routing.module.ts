@@ -17,8 +17,8 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'login', component: LoginComponent },
-  { path: '**', redirectTo: '/login', pathMatch: 'full' }
+  { path: 'login', component: LoginComponent, canActivate: mapToCanActivate([ CanActivateGuard ]) },
+  { path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
 ];
 
 @NgModule({
