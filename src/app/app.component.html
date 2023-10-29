@@ -1,14 +1,1 @@
-<span>APLIKACJA DLA KUBSONÓW app is running ({{ mode ? 'PROD' : 'DEV' }})!</span>
-
-<div *ngIf="user">
-  <p>Hello, {{user.displayName}}!</p>
-  <p>Your email: {{user.email}}</p>
-  <img [src]="user.photoURL" alt="User thumbnail">
-  <pre>
-    {{ user | json }}
-  </pre>
-  <button [disabled]="!user" (click)="logout()">Logout</button>
-</div>
-
-<button (click)="getGooglePhotoData()" [disabled]="!user">getGooglePhotoData</button>
-<button (click)="firebaseLogin()" [disabled]="!!user">firebaseLogin</button>
+<router-outlet></router-outlet>

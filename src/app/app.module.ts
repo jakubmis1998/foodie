@@ -1,22 +1,19 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
-import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireModule } from '@angular/fire/compat';
+import { LoginModule } from './modules/login/login.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import {
   GoogleInitOptions,
   GoogleLoginProvider,
-  GoogleSigninButtonModule,
   SocialAuthServiceConfig,
   SocialLoginModule
 } from '@abacritt/angularx-social-login';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AngularFireModule } from '@angular/fire/compat';
 
 @NgModule({
   declarations: [
@@ -27,12 +24,10 @@ import { AngularFireModule } from '@angular/fire/compat';
     AppRoutingModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
-    // provideFirebaseApp(() => initializeApp(environment.firebase)),
-    // provideAuth(() => getAuth()),
-    // provideFirestore(() => getFirestore()),
     SocialLoginModule,
-    GoogleSigninButtonModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    LoginModule,
+    DashboardModule
   ],
   providers: [{
     provide: 'SocialAuthServiceConfig',
@@ -54,4 +49,4 @@ import { AngularFireModule } from '@angular/fire/compat';
   }],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
