@@ -14,7 +14,6 @@ import {
   SocialAuthServiceConfig,
   SocialLoginModule
 } from '@abacritt/angularx-social-login';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -48,8 +47,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
           console.error(err);
         }
       } as SocialAuthServiceConfig
-    },
-    { provide: LocationStrategy, useClass: HashLocationStrategy }
+    }
   ],
   bootstrap: [AppComponent]
 })
