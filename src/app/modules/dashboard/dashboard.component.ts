@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { PhotoService } from './services/photo.service';
 
@@ -10,7 +9,6 @@ import { PhotoService } from './services/photo.service';
 })
 export class DashboardComponent implements OnInit {
 
-  mode = environment.production;
   photos: any[];
 
   constructor(private photoService: PhotoService, public authService: AuthService) {}

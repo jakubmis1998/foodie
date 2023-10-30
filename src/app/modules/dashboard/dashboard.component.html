@@ -1,19 +1,21 @@
 <p>dashboard works!</p>
-<span>APLIKACJA DLA KUBSONÓW app is running ({{ mode ? 'PROD' : 'DEV' }})!</span>
+<span>APLIKACJA DLA KUBSONÓW app is running!</span>
 
-PHOTOS:
-<div *ngFor="let photo of photos">
-  <img [src]="photo.baseUrl" width="200" alt="User thumbnail">
-</div>
 
-USER:
-<div *ngIf="(authService.getUser() | async) as user">
-  <p>Hello, {{user?.displayName}}!</p>
-  <p>Your email: {{user?.email}}</p>
-  <img [src]="user?.photoURL" alt="User thumbnail" referrerpolicy="no-referrer">
-  <pre>
-    {{ user | json }}
-  </pre>
-</div>
+
+<!--Photos:-->
+<!--<div *ngFor="let photo of photos">-->
+<!--  <img [src]="photo.baseUrl" width="200" alt="User thumbnail">-->
+<!--</div>-->
+
+<!--USER:-->
+<!--<div *ngIf="(authService.getUser() | async) as user">-->
+<!--  <p>Hello, {{user?.displayName}}!</p>-->
+<!--  <p>Your email: {{user?.email}}</p>-->
+<!--  <img [src]="user?.photoURL" alt="User thumbnail" referrerpolicy="no-referrer">-->
+<!--  <pre>-->
+<!--    {{ user | json }}-->
+<!--  </pre>-->
+<!--</div>-->
 
 <button (click)="logout()">Log out</button>

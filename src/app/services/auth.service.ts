@@ -5,13 +5,14 @@ import firebase from 'firebase/compat';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { from, map, Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { User, UserCredential } from '../models/firebaseModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  userCredential: firebase.auth.UserCredential;
+  userCredential: UserCredential;
 
   constructor(
     private httpClient: HttpClient,
@@ -49,11 +50,11 @@ export class AuthService {
     );
   }
 
-  userChanged(user: firebase.User | null | any): void {
+  userChanged(user: User): void {
     this.fireAuth.updateCurrentUser(user).then(() => {});
   }
 
-  getUser(): Observable<firebase.User | null> {
+  getUser(): Observable<User> {
     return from(this.fireAuth.user);
   }
 
