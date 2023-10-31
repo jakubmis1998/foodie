@@ -1,0 +1,19 @@
+.topbar-body {
+  background-color: white;
+  width: 100vw;
+  height: 8vh;
+  box-shadow: rgba(35, 35, 35, 0.1) 0px 10px 10px -10px;
+
+  .user-btn {
+    background-color: rgb(100, 100, 100, 0.15);
+
+    .user-primary-info {
+      font-size: .9rem;
+    }
+
+    .user-secondary-info {
+      font-size: .6rem;
+      color: gray;
+    }
+  }
+}

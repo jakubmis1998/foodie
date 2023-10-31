@@ -1,0 +1,36 @@
+<div class="topbar-body d-flex align-items-center justify-content-between px-4">
+  <div class="topbar-header d-flex flex-row align-items-center">
+    <span class="f-2x">{{ Emoji.wave | emoji }}</span>
+    <span class="f-3x px-2">Foodie!</span>
+    <span class="f-2x">{{ Emoji.hamburger | emoji }}</span>
+  </div>
+
+  <div class="d-flex">
+    <select name="searchType" id="searchType">
+      <option value="volvo">Name</option>
+      <option value="saab">Place</option>
+      <option value="mercedes">Tag</option>
+    </select>
+    <input placeholder="Search by (dropdown: name, place, tag)">
+  </div>
+
+  <div class="dropdown">
+    <button class="btn user-btn d-flex align-items-center dropdown-toggle text-black" type="button" id="userDropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+      <div *ngIf="(authService.getUser() | async) as user; else loading" class="d-flex">
+        <div class="user-name d-flex flex-column">
+          <span class="user-primary-info">{{ user.displayName }}</span>
+          <span class="user-secondary-info">{{ user.email }}</span>
+        </div>
+        <img class="rounded-circle mx-2" [src]="user.photoURL" width="35px" alt="User thumbnail" referrerpolicy="no-referrer">
+      </div>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="userDropdownMenu">
+      <button class="dropdown-item btn">Profile</button>
+      <button class="dropdown-item btn" (click)="logout()">Log out</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <app-loading></app-loading>
+</ng-template>

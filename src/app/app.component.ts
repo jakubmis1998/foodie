@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
       console.log("authState changed. Email: ", user);
     });
 
-    this.getData();
+    // this.getData();
   }
 
   addData(f: any): void {

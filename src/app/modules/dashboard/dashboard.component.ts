@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
 import { PhotoService } from './services/photo.service';
+import { GooglePhoto } from '../../models/googlePhoto';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,18 +9,13 @@ import { PhotoService } from './services/photo.service';
 })
 export class DashboardComponent implements OnInit {
 
-  photos: any[];
+  photos: GooglePhoto[];
 
-  constructor(private photoService: PhotoService, public authService: AuthService) {}
+  constructor(private photoService: PhotoService) {}
 
   ngOnInit(): void {
     this.photoService.getPhotos().subscribe(photos => {
-      console.log(photos.mediaItems);
-      this.photos = photos.mediaItems;
+      this.photos = photos;
     });
-  }
-
-  logout(): void {
-    this.authService.logout();
   }
 }

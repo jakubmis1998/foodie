@@ -17,6 +17,9 @@ import {
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
+import { LayoutModule } from './modules/layout/layout.module';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -24,6 +27,7 @@ import { FormsModule } from '@angular/forms';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
@@ -32,7 +36,14 @@ import { FormsModule } from '@angular/forms';
     SocialLoginModule,
     AngularFireAuthModule,
     LoginModule,
-    DashboardModule
+    DashboardModule,
+    LayoutModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+      enableHtml: true
+    })
   ],
   providers: [
     {

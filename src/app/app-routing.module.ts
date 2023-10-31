@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { mapToCanActivate, RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './modules/login/login.component';
-import { AppComponent } from './app.component';
 import { CanActivateGuard } from './guards/can-activate-guard';
+import { LayoutComponent } from './modules/layout/layout.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AppComponent,
+    component: LayoutComponent,
     children: [
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
       {

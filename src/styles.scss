@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+
+// regular style toast
+@import 'ngx-toastr/toastr';
+// bootstrap
+@import "~bootstrap/dist/css/bootstrap.css";
+// custom
+@import './app/styles/index';

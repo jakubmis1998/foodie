@@ -1,21 +1,14 @@
-<p>dashboard works!</p>
 <span>APLIKACJA DLA KUBSONÓW app is running!</span>
 
+<br>
 
+<div *ngIf="photos; else loading" class="d-flex">
+  <div *ngFor="let photo of photos" class="d-flex flex-column align-items-center mx-2">
+    <img [src]="photo.baseUrl" width="200" alt="User thumbnail">
+    {{ photo.filename }}
+  </div>
+</div>
 
-<!--Photos:-->
-<!--<div *ngFor="let photo of photos">-->
-<!--  <img [src]="photo.baseUrl" width="200" alt="User thumbnail">-->
-<!--</div>-->
-
-<!--USER:-->
-<!--<div *ngIf="(authService.getUser() | async) as user">-->
-<!--  <p>Hello, {{user?.displayName}}!</p>-->
-<!--  <p>Your email: {{user?.email}}</p>-->
-<!--  <img [src]="user?.photoURL" alt="User thumbnail" referrerpolicy="no-referrer">-->
-<!--  <pre>-->
-<!--    {{ user | json }}-->
-<!--  </pre>-->
-<!--</div>-->
-
-<button (click)="logout()">Log out</button>
+<ng-template #loading>
+  <app-loading>Photos loading...</app-loading>
+</ng-template>
