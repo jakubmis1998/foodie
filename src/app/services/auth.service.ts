@@ -26,7 +26,6 @@ export class AuthService {
     provider.setCustomParameters({ prompt: 'select_account' });
     this.fireAuth.signInWithPopup(provider).then((userCredential: firebase.auth.UserCredential) => {
       this.userCredential = userCredential;
-      console.log(userCredential);
       this.router.navigate(['/dashboard']);
       console.log('You have been successfully logged in!', userCredential);
       localStorage.setItem('accessToken', (userCredential.credential as firebase.auth.OAuthCredential).accessToken!);

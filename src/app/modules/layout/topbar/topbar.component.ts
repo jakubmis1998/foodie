@@ -10,8 +10,6 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class TopbarComponent implements OnInit {
 
-  Emoji = Emoji;
-
   constructor(
     public authService: AuthService,
     private toastrService: ToastrService

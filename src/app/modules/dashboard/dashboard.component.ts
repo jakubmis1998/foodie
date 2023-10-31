@@ -9,13 +9,13 @@ import { GooglePhoto } from '../../models/googlePhoto';
 })
 export class DashboardComponent implements OnInit {
 
-  photos: GooglePhoto[];
+  photos: GooglePhoto[] = [];
 
   constructor(private photoService: PhotoService) {}
 
   ngOnInit(): void {
-    this.photoService.getPhotos().subscribe(photos => {
-      this.photos = photos;
-    });
+    // this.photoService.getPhotos().subscribe(photos => {
+    //   this.photos = photos;
+    // });
   }
 }
