@@ -1,2 +1,18 @@
-<p>login works!</p>
-<button (click)="firebaseLogin()">firebaseLogin</button>
+<div class="page-body d-flex flex-column justify-content-center align-items-center">
+  <div class="waviy mb-5">
+    <span style="--i:1">f</span>
+    <span style="--i:2">o</span>
+    <span style="--i:3">o</span>
+    <span style="--i:4">d</span>
+    <span style="--i:5">i</span>
+    <span style="--i:6">e</span>
+  </div>
+  <button class="login-btn mt-5" (click)="firebaseLogin()"></button>
+</div>
+
+<img *ngFor="let iconName of iconNames; let i = index"
+     class="bg-transparent stamp-{{i}}"
+     style="--left: {{left[i]}}%; --top: {{top[i]}}%"
+     width="50px"
+     src="{{ 'assets/img/login/' + iconName + '.svg' }}"
+     [alt]="iconName">

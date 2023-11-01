@@ -2,4 +2,10 @@
   background: white;
   width: 100vw;
   height: 100vh;
+
+  .content {
+    border-top-left-radius: 4rem;
+    border-top-right-radius: 4rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+  }
 }
