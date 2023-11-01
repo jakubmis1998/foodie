@@ -1,6 +1,10 @@
-.routes-modal {
+.modal-body {
   .tile {
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 10px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0 3px 10px;
     text-decoration: none;
   }
+}
+
+::ng-deep .modal-content  {
+  width: auto;
 }

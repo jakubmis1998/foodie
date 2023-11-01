@@ -1,15 +1,4 @@
-<form [formGroup]="form">
-  <label for="name">Name: </label>
-  <input id="name" type="text" formControlName="name">
-
-  <label for="rate">Rate: </label>
-  <input id="rate" type="text" formControlName="rate">
-
-  <label for="location">Location: </label>
-  <input id="location" type="number" formControlName="location">
-
-  <button (click)="createPlace()">Create</button>
-</form>
+<button class="btn" (click)="createPlace()">Create place</button>
 
 <div *ngFor="let place of places">
   {{ place.id }} / {{ place.name }}

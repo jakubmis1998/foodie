@@ -1,6 +1,12 @@
 <div class="topbar-body d-flex align-items-center justify-content-between px-4">
 
-  <app-navigation></app-navigation>
+  <button type="button" class="btn px-0" (click)="openNavigation()">
+    <div class="topbar-header d-flex flex-row align-items-center">
+      <span class="f-2x">{{ Emoji.wave | emoji }}</span>
+      <span class="f-3x px-2">Foodie!</span>
+      <span class="f-2x">{{ Emoji.hamburger | emoji }}</span>
+    </div>
+  </button>
 
   <div class="d-flex">
     <select name="searchType" id="searchType">

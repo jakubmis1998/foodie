@@ -32,6 +32,16 @@ export class FirestoreDataService<T extends { [x: string]: any; }> {
     ) as Observable<T[]>;
   }
 
+  get(id: string): Observable<T> {
+    return from(this.getCollection().doc(id).get()).pipe(
+      map(doc => doc.data() as unknown as T),
+      catchError((err) => {
+        this.toastrService.error(err, 'Error');
+        return err;
+      })
+    ) as Observable<T>;
+  }
+
   create(data: T): Observable<void> {
     return from(this.getCollection().add(data)).pipe(
       catchError((err) => {

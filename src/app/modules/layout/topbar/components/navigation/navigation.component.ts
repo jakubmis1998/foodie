@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Emoji } from '../../../../../models/emoji';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-navigation',
@@ -9,6 +10,8 @@ import { Emoji } from '../../../../../models/emoji';
 export class NavigationComponent {
 
   Emoji = Emoji;
+
+  constructor(public activeModal: NgbActiveModal) {}
 
   routeTiles = [
     { label: 'Dashboard', filename: 'dashboard', route: '/dashboard' },

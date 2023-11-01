@@ -1,26 +1,12 @@
-<!-- Button trigger modal -->
-<button type="button" class="btn px-0" data-bs-toggle="modal" data-bs-target="#routerModal">
-  <div class="topbar-header d-flex flex-row align-items-center">
-    <span class="f-2x">{{ Emoji.wave | emoji }}</span>
-    <span class="f-3x px-2">Foodie!</span>
-    <span class="f-2x">{{ Emoji.hamburger | emoji }}</span>
+<div class="modal-header d-flex align-items-center justify-content-center">
+  <div class="modal-title">
+    <h5 class="mb-0 me-1">Take a look!</h5>
   </div>
-</button>
-
-<!-- Modal -->
-<div class="routes-modal modal fade" id="routerModal" tabindex="-1" aria-labelledby="routerModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content w-auto">
-      <div class="modal-header d-flex justify-content-center">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Take a look!</h1>
-      </div>
-      <div class="modal-body d-flex justify-content-center">
-        <a *ngFor="let tile of routeTiles" class="tile d-flex flex-column justify-content-center align-items-center rounded cursor-pointer mx-4 py-2"
-           [routerLink]="[tile.route]" data-bs-dismiss="modal">
-          <img class="tile-icon px-4 pb-2" width="150px" src="{{ 'assets/img/' + tile.filename + '.svg' }}" alt="{{ tile.filename }} icon">
-          <span class="text-black">{{ tile.label }}</span>
-        </a>
-      </div>
-    </div>
-  </div>
+</div>
+<div class="modal-body d-flex">
+  <a *ngFor="let tile of routeTiles" class="tile d-flex flex-column justify-content-center align-items-center rounded cursor-pointer mx-4 py-2"
+     [routerLink]="[tile.route]" (click)="activeModal.close()">
+    <img class="tile-icon px-4 pb-2" width="150px" src="{{ 'assets/img/' + tile.filename + '.svg' }}" alt="{{ tile.filename }} icon">
+    <span class="text-black">{{ tile.label }}</span>
+  </a>
 </div>

@@ -1,0 +1,108 @@
+<div class="modal-header d-flex align-items-center justify-content-center">
+  <div class="modal-title d-flex align-items-center flex-row">
+    <h5 class="mb-0 me-1">Add a new place!</h5>
+    <span class="f-2x">{{ Emoji.run | emoji }}</span>
+  </div>
+</div>
+<div class="modal-body d-flex justify-content-center">
+  <app-loading *ngIf="!form"></app-loading>
+  <form *ngIf="form" [formGroup]="form">
+    <div class="mb-3 row align-items-center">
+      <label for="name" class="col-sm-2 col-form-label">Name</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="name" class="form-control" id="name">
+        <div *ngIf="isValidField('name')" class="validation-message">
+          Please provide a valid name.
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div formGroupName="rating">
+      <div class="mb-3 row align-items-center">
+        <label for="localization" class="col-sm-2 col-form-label">Localization</label>
+        <div class="col-sm-10 d-flex justify-content-center">
+          <input type="hidden" formControlName="localization" id="localization" class="form-control">
+          <ngx-stars color="#345beb" [size]="2" [maxStars]="10" [initialStars]="getFieldValue('rating.localization')"
+                     (ratingOutput)="setStarValue('rating.localization', $event)">
+          </ngx-stars>
+        </div>
+      </div>
+      <div class="mb-3 row align-items-center">
+        <label for="staff" class="col-sm-2 col-form-label">Staff</label>
+        <div class="col-sm-10 d-flex justify-content-center">
+          <input type="hidden" formControlName="staff" class="form-control" id="staff">
+          <ngx-stars color="#345beb" [size]="2" [maxStars]="10" [initialStars]="getFieldValue('rating.staff')"
+                     (ratingOutput)="setStarValue('rating.staff', $event)">
+          </ngx-stars>
+        </div>
+      </div>
+      <div class="mb-3 row align-items-center">
+        <label for="comfort" class="col-sm-2 col-form-label">Comfort</label>
+        <div class="col-sm-10 d-flex justify-content-center">
+          <input type="hidden" formControlName="comfort" class="form-control" id="comfort">
+          <ngx-stars color="#345beb" [size]="2" [maxStars]="10" [initialStars]="getFieldValue('rating.comfort')"
+                     (ratingOutput)="setStarValue('rating.comfort', $event)">
+          </ngx-stars>
+        </div>
+      </div>
+      <div class="mb-3 row align-items-center">
+        <label for="prices" class="col-sm-2 col-form-label">Prices</label>
+        <div class="col-sm-10 d-flex justify-content-center">
+          <input type="hidden" formControlName="prices" class="form-control" id="prices">
+          <ngx-stars color="#345beb" [size]="2" [maxStars]="10" [initialStars]="getFieldValue('rating.prices')"
+                     (ratingOutput)="setStarValue('rating.prices', $event)">
+          </ngx-stars>
+        </div>
+      </div>
+      <div class="mb-3 row align-items-center">
+        <label for="cleanliness" class="col-sm-2 col-form-label">Cleanliness</label>
+        <div class="col-sm-10 d-flex justify-content-center">
+          <input type="hidden" formControlName="cleanliness" class="form-control" id="cleanliness">
+          <ngx-stars color="#345beb" [size]="2" [maxStars]="10" [initialStars]="getFieldValue('rating.cleanliness')"
+                     (ratingOutput)="setStarValue('rating.cleanliness', $event)">
+          </ngx-stars>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div formGroupName="address">
+      <div class="mb-3 row align-items-center">
+        <label for="city" class="col-sm-2 col-form-label">City</label>
+        <div class="col-sm-10">
+          <input type="text" formControlName="city" class="form-control" id="city">
+        </div>
+      </div>
+      <div class="mb-3 row align-items-center">
+        <label for="street" class="col-sm-2 col-form-label">Street</label>
+        <div class="col-sm-10">
+          <input type="street" formControlName="street" class="form-control" id="street">
+        </div>
+      </div>
+      <div class="mb-3 row align-items-center">
+        <label for="streetNumber" class="col-sm-2 col-form-label">Number</label>
+        <div class="col-sm-10">
+          <input type="number" formControlName="streetNumber" class="form-control" id="streetNumber">
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="mb-3 row align-items-center">
+      <label for="name" class="col-sm-2 col-form-label">Tags</label>
+      <div class="col-sm-10">
+        <tag-input formControlName="tags" [modelAsStrings]="true"></tag-input>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn" (click)="activeModal.close()">Close</button>
+  <button type="button" class="btn btn-outline-primary" [disabled]="(form ? !form.valid : true) || loading" (click)="save()">
+    <app-loading [small]="true" *ngIf="loading"></app-loading> Create
+  </button>
+</div>

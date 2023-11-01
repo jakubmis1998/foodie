@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { Emoji, getEmoji } from '../../../models/emoji';
 import { ToastrService } from 'ngx-toastr';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NavigationComponent } from './components/navigation/navigation.component';
 
 @Component({
   selector: 'app-topbar',
@@ -10,9 +12,12 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class TopbarComponent implements OnInit {
 
+  Emoji = Emoji;
+
   constructor(
     public authService: AuthService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -20,6 +25,10 @@ export class TopbarComponent implements OnInit {
       'You have been logged in successfully',
       `Hello ${getEmoji(Emoji.wave)}`
     );
+  }
+
+  openNavigation(): void {
+    this.modalService.open(NavigationComponent, { centered: true });
   }
 
   logout(): void {

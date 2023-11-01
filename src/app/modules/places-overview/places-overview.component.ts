@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FirestoreDataService } from '../../services/firestore-data.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Place } from '../../models/place';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreateEditPlaceComponent } from './create-edit-place/create-edit-place.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-places-overview',
@@ -11,11 +14,12 @@ import { Place } from '../../models/place';
 export class PlacesOverviewComponent implements OnInit {
 
   places: Place[];
-  form: FormGroup;
 
   constructor(
     private firestoreDataService: FirestoreDataService<Place>,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private modalService: NgbModal,
+    private toastrService: ToastrService
   ) {
     this.firestoreDataService.collectionName = 'places';
   }
@@ -24,28 +28,16 @@ export class PlacesOverviewComponent implements OnInit {
     this.firestoreDataService.getAll().subscribe(
       places => this.places = places
     );
-
-    this.form = this.fb.group({
-      name: new FormControl<string>(''),
-      rate: new FormControl<string>(''),
-      location: new FormControl<number | null>(null)
-    });
   }
 
   createPlace(): void {
-    this.firestoreDataService.create(this.form.value).subscribe(
-      () => {
-        console.log("Added");
-      }
-    );
+    this.modalService.open(CreateEditPlaceComponent, { centered: true }).result.catch(() => {});
   }
 
   updatePlace(id: string): void {
-    this.firestoreDataService.update(id, this.form.value).subscribe(
-      () => {
-        console.log("Updated");
-      }
-    );
+    const modalRef = this.modalService.open(CreateEditPlaceComponent, { centered: true });
+    (modalRef.componentInstance as CreateEditPlaceComponent).placeId = id;
+    modalRef.result.catch(() => {});
   }
 
   deletePlace(id: string): void {

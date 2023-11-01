@@ -1,0 +1,11 @@
+input, textarea, select {
+  &:has(+.validation-message) {
+    border-color: red;
+  }
+}
+
+.validation-message {
+  color: red;
+  font-size: small;
+  margin-top: .3rem;
+}
