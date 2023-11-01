@@ -27,7 +27,6 @@ export class AuthService {
     this.fireAuth.signInWithPopup(provider).then((userCredential: firebase.auth.UserCredential) => {
       this.userCredential = userCredential;
       this.router.navigate(['/dashboard']);
-      console.log('You have been successfully logged in!', userCredential);
       localStorage.setItem('accessToken', (userCredential.credential as firebase.auth.OAuthCredential).accessToken!);
     })
       .catch((error) => {
@@ -37,7 +36,6 @@ export class AuthService {
 
   logout(): void {
     this.fireAuth.signOut().then(() => {
-      console.log("Wylogowano");
       localStorage.removeItem('accessToken');
       this.router.navigate(['/login']);
     });

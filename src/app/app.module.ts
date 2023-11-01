@@ -14,12 +14,11 @@ import {
   SocialAuthServiceConfig,
   SocialLoginModule
 } from '@abacritt/angularx-social-login';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { LayoutModule } from './modules/layout/layout.module';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -31,8 +30,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore()),
     SocialLoginModule,
     AngularFireAuthModule,
     LoginModule,
