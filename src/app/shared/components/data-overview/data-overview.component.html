@@ -1,0 +1,13 @@
+<div class="overview">
+  <div *ngIf="!loading" class="overview-data">
+    <div *ngFor="let item of items">
+      <ng-container *ngTemplateOutlet="itemTemplate; context: getItemContext(item)"></ng-container>
+    </div>
+  </div>
+  <div *ngIf="loading" class="overview-data">
+    <app-loading></app-loading>
+  </div>
+
+  <button (click)="changePage('prev')">Prev</button>
+  <button (click)="changePage('next')">Next</button>
+</div>

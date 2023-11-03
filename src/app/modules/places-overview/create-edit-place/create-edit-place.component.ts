@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Emoji } from '../../../models/emoji';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Place, PlaceAddress, PlaceRating } from '../../../models/place';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Place } from '../../../models/place';
 import { FirestoreDataService } from '../../../services/firestore-data.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { finalize, Observable, of } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-create-edit-place',
@@ -22,19 +21,18 @@ export class CreateEditPlaceComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private firestoreDataService: FirestoreDataService<Place>,
-    public activeModal: NgbActiveModal,
-    private toastrService: ToastrService
+    private firestoreDataService: FirestoreDataService,
+    public activeModal: NgbActiveModal
   ) {}
 
   ngOnInit(): void {
     (this.placeId ? this.firestoreDataService.get(this.placeId) : of({} as Place)).subscribe(place => {
-      this.initForm(place);
+      this.initForm(place as Place);
     });
   }
 
   initForm(place?: Place): void {
-    const defaultRateValue = 5;
+    const defaultRateValue = 2.5;
     this.form = this.fb.group({
       name: this.fb.control<string | undefined>(place?.name, [Validators.required]),
       address: this.fb.group({
@@ -49,7 +47,9 @@ export class CreateEditPlaceComponent implements OnInit {
         prices: this.fb.control<number>(place?.rating?.prices || defaultRateValue),
         cleanliness: this.fb.control<number>(place?.rating?.cleanliness || defaultRateValue)
       }),
-      tags: this.fb.control<string[] | undefined>(place?.tags)
+      tags: this.fb.control<string[] | undefined>(place?.tags),
+      createdAt: this.fb.control<Date | undefined>(place?.createdAt),
+      changedAt: this.fb.control<Date | undefined>(place?.changedAt)
     });
   }
 
@@ -57,7 +57,10 @@ export class CreateEditPlaceComponent implements OnInit {
     this.loading = true;
     let saveCall: Observable<void>;
     if (this.form.valid) {
+      const now = new Date();
+      this.form.get('changedAt')?.setValue(now);
       if (!this.placeId) {
+        this.form.get('createdAt')?.setValue(now);
         saveCall = this.firestoreDataService.create(this.form.value);
       } else {
         saveCall = this.firestoreDataService.update(this.placeId, this.form.value);
@@ -66,7 +69,6 @@ export class CreateEditPlaceComponent implements OnInit {
       saveCall.subscribe(() => {
         this.loading = false;
         this.activeModal.close();
-        this.toastrService.success(this.placeId ? 'Place updated!' : 'New place added!', 'Success');
       }, () => this.loading = false);
     }
   }

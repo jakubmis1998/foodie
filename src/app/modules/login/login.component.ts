@@ -29,7 +29,7 @@ export class LoginComponent {
 
   private calculateIconPositions(): void {
     for (let i=0; i<this.iconNames.length; i++) {
-      this.left.push(i % 2 === 0 ? 60 + i*2.7 : 40 - i*3.2);
+      this.left.push(i % 2 === 0 ? 60 + i*2.2 : 40 - i*3.2);
       this.top.push(5 + i*6.8);
     }
     const shuffleArray = (array: any[]) => {

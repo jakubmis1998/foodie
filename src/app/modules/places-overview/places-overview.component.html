@@ -1,7 +1,11 @@
 <button class="btn" (click)="createPlace()">Create place</button>
 
-<div *ngFor="let place of places">
-  {{ place.id }} / {{ place.name }}
-  <button (click)="updatePlace(place.id)">Update</button>
-  <button (click)="deletePlace(place.id)">Delete</button>
+<div class="scroll-table">
+  <app-data-overview [itemTemplate]="dataItem"></app-data-overview>
 </div>
+
+<ng-template #dataItem let-item>
+  1234 {{ item.name }} xD
+  <button class="btn" (click)="updatePlace(item.id)">Update</button>
+  <button class="btn" (click)="deletePlace(item.id)">Delete</button>
+</ng-template>

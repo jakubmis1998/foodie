@@ -1,60 +1,88 @@
 import { Injectable } from '@angular/core';
-import { catchError, from, map, Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { catchError, from, map, Observable, tap } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import firebase from "firebase/compat/app";
+import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore'; // Required for side-effects
-import { CollectionReference } from '../models/firebaseModel';
+import { CollectionReference, DocumentData, QueryDocumentSnapshot } from '../models/firebaseModel';
+import { ListResponse, Object } from '../models/utils';
+import { SortingSettings } from '../models/sort';
+import FieldPath = firebase.firestore.FieldPath;
 
 @Injectable({
   providedIn: 'root'
 })
-export class FirestoreDataService<T extends { [x: string]: any; }> {
+export class FirestoreDataService {
 
-  public collectionName: string;
   private collection: CollectionReference
 
   constructor(
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private router: Router
   ) {}
 
-  getAll(): Observable<T[]> {
-    return from(this.getCollection().get()).pipe(
-      map(data => data.docs.map(doc => {
+  getAll(
+    latestDoc?: QueryDocumentSnapshot<DocumentData> | undefined, reversed = false, sortingSettings = new SortingSettings(), pageSize = 4
+  ): Observable<ListResponse> {
+    const call = this.getCollection().orderBy(new FieldPath(...sortingSettings.column), sortingSettings.direction);
+
+    const columnValue = latestDoc?.data()[sortingSettings.column[0]];
+    const paginated = reversed ?
+      call.endBefore(columnValue) :
+      call.startAfter(columnValue || sortingSettings.alternativeValue);
+
+    const limited = reversed ? paginated.limitToLast(pageSize) : paginated.limit(pageSize);
+
+    return from(limited.get()).pipe(
+      map(data => {
         return {
-          id: doc.id,
-          ...doc.data()
-        } as unknown as T;
-      })),
+          docs: data.docs,
+          items: data.docs.map(doc => {
+            return {
+              id: doc.id,
+              ...doc.data()
+            };
+          })
+        };
+      }),
+      tap(result => {
+        if (!result.docs.length) {
+          this.toastrService.info('There is no more data.', 'Info!')
+        }
+      }),
       catchError(err => {
-        this.toastrService.error(err, 'Error');
+        this.toastrService.error(err, 'Error!');
         return err;
       })
-    ) as Observable<T[]>;
+    ) as Observable<ListResponse>;
   }
 
-  get(id: string): Observable<T> {
+  get(id: string): Observable<Object> {
     return from(this.getCollection().doc(id).get()).pipe(
-      map(doc => doc.data() as unknown as T),
+      map(doc => doc.data() as DocumentData),
       catchError((err) => {
-        this.toastrService.error(err, 'Error');
+        this.toastrService.error(err, 'Error!');
         return err;
       })
-    ) as Observable<T>;
+    ) as Observable<DocumentData>;
   }
 
-  create(data: T): Observable<void> {
+  create(data: Object): Observable<void> {
     return from(this.getCollection().add(data)).pipe(
+      tap(() => this.toastrService.success('Object successfully created.', 'Success!')),
+      map(() => undefined),
       catchError((err) => {
-        this.toastrService.error(err, 'Error');
+        this.toastrService.error(err, 'Error!');
         return err;
       })
     ) as Observable<void>;
   }
 
-  update(id: string, data: T): Observable<void> {
+  update(id: string, data: Object): Observable<void> {
     return from(this.getCollection().doc(id).set(data)).pipe(
+      tap(() => this.toastrService.success('Object successfully updated.', 'Success!')),
       catchError((err) => {
-        this.toastrService.error(err, 'Error');
+        this.toastrService.error(err, 'Error!');
         return err;
       })
     ) as Observable<void>;
@@ -62,8 +90,9 @@ export class FirestoreDataService<T extends { [x: string]: any; }> {
 
   delete(id: string): Observable<void> {
     return from(this.getCollection().doc(id).delete()).pipe(
+      tap(() => this.toastrService.success('Object successfully removed.', 'Success!')),
       catchError((err) => {
-        this.toastrService.error(err, 'Error');
+        this.toastrService.error(err, 'Error!');
         return err;
       })
     ) as Observable<void>;
@@ -71,7 +100,9 @@ export class FirestoreDataService<T extends { [x: string]: any; }> {
 
   private getCollection(): CollectionReference {
     if(!this.collection) {
-      this.collection = firebase.firestore().collection(this.collectionName);
+      // Get 'x' from 'x-overview'
+      const collectionName = this.router.url.split('-')[0];
+      this.collection = firebase.firestore().collection(collectionName);
     }
     return this.collection;
   }

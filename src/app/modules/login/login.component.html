@@ -12,7 +12,7 @@
 
 <img *ngFor="let iconName of iconNames; let i = index"
      class="bg-transparent stamp-{{i}}"
-     style="--left: {{left[i]}}%; --top: {{top[i]}}%"
+     style="--left: {{left[i]}}vw; --top: {{top[i]}}vh"
      width="50px"
      src="{{ 'assets/img/login/' + iconName + '.svg' }}"
      [alt]="iconName">

@@ -1,16 +1,27 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingComponent } from './components/loading/loading.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { NgxStarsModule } from 'ngx-stars';
+import { PipesModule } from '../pipes/pipes.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DataOverviewComponent } from './components/data-overview/data-overview.component';
 
 @NgModule({
   declarations: [
-    LoadingComponent
+    LoadingComponent,
+    DataOverviewComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    InfiniteScrollModule
   ],
   exports: [
-    LoadingComponent
+    LoadingComponent,
+    DataOverviewComponent,
+    NgxStarsModule,
+    NgbModule,
+    PipesModule
   ]
 })
 export class SharedModule { }

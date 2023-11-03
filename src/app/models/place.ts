@@ -4,6 +4,8 @@ export interface Place {
   tags: string[];
   rating: PlaceRating; // Out of 10, step: 0.5? External rating from google?
   address: PlaceAddress; // Google maps?
+  createdAt: Date;
+  changedAt: Date;
 }
 
 export interface PlaceRating {
