@@ -1,11 +1,3 @@
-<button class="btn" (click)="createPlace()">Create place</button>
-
-<div class="scroll-table">
-  <app-data-overview [itemTemplate]="dataItem"></app-data-overview>
+<div class="h-100 mx-5">
+  <router-outlet></router-outlet>
 </div>
-
-<ng-template #dataItem let-item>
-  1234 {{ item.name }} xD
-  <button class="btn" (click)="updatePlace(item.id)">Update</button>
-  <button class="btn" (click)="deletePlace(item.id)">Delete</button>
-</ng-template>

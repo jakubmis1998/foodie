@@ -1,0 +1,34 @@
+<div class="overview-header d-flex">
+  <span class="f-3x">Places</span>
+
+  <div class="d-flex">
+    <select name="searchType" id="searchType">
+      <option value="volvo">Name</option>
+      <option value="saab">Place</option>
+      <option value="mercedes">Tag</option>
+    </select>
+    <input placeholder="Search by (dropdown: name, place, tag)">
+  </div>
+</div>
+
+<app-data-overview [itemTemplate]="dataItem"></app-data-overview>
+
+<button class="btn btn-primary btn-create" (click)="createPlace()">+</button>
+
+<ng-template #dataItem let-item>
+  <div class="overview-item d-flex flex-column my-3 w-100">
+    <div class="item-header d-flex justify-content-center align-items-center cursor-pointer" (click)="goToDetails(item)">
+      <span class="item-name w-25 f-2x text-center fw-bold">{{ item.averageRating }} / 5.0 {{ Emoji.star | emoji }}</span>
+      <span class="item-name w-50 f-2x text-center text-truncate fw-bold">{{ item.name }}</span>
+      <span class="item-name w-25 text-center">{{ item.changedAt.toDate() | date: "MMM dd, yyyy 'at' HH:mm" }}</span>
+    </div>
+
+    <div class="divider m-0"></div>
+
+    <div class="item-content d-flex justify-content-between align-items-center mx-3">
+      <fa-icon class="cursor-pointer f-3x text-primary" [icon]="faEdit" (click)="updatePlace(item.id)"></fa-icon>
+      item content
+      <fa-icon class="cursor-pointer f-3x text-danger" [icon]="faTrashAlt" (click)="deletePlace(item.id)"></fa-icon>
+    </div>
+  </div>
+</ng-template>

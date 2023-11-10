@@ -7,11 +7,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateEditPlaceComponent } from './create-edit-place/create-edit-place.component';
 import { TagInputModule } from 'ngx-chips';
 import { SharedModule } from '../../shared/shared.module';
+import { PlaceDetailsComponent } from './place-details/place-details.component';
+import { PlaceTableComponent } from './place-table/place-table.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
     PlacesOverviewComponent,
-    CreateEditPlaceComponent
+    CreateEditPlaceComponent,
+    PlaceDetailsComponent,
+    PlaceTableComponent
   ],
   imports: [
     TagInputModule,
@@ -19,7 +24,8 @@ import { SharedModule } from '../../shared/shared.module';
     RouterModule.forChild(placesOverviewRoutes),
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    FontAwesomeModule
   ]
 })
 export class PlacesOverviewModule { }

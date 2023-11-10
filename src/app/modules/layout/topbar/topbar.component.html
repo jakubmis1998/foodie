@@ -8,15 +8,6 @@
     </div>
   </button>
 
-  <div class="d-flex">
-    <select name="searchType" id="searchType">
-      <option value="volvo">Name</option>
-      <option value="saab">Place</option>
-      <option value="mercedes">Tag</option>
-    </select>
-    <input placeholder="Search by (dropdown: name, place, tag)">
-  </div>
-
   <div class="dropdown">
     <button class="btn user-btn d-flex align-items-center dropdown-toggle text-black" type="button" id="userDropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
       <div *ngIf="(authService.getUser() | async) as user; else loading" class="d-flex">

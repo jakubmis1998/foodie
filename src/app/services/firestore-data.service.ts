@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, from, map, Observable, tap } from 'rxjs';
+import { catchError, from, map, Observable, Subject, tap } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore'; // Required for side-effects
@@ -15,6 +15,7 @@ import FieldPath = firebase.firestore.FieldPath;
 export class FirestoreDataService {
 
   private collection: CollectionReference
+  dataChanged = new Subject();
 
   constructor(
     private toastrService: ToastrService,
@@ -69,7 +70,10 @@ export class FirestoreDataService {
 
   create(data: Object): Observable<void> {
     return from(this.getCollection().add(data)).pipe(
-      tap(() => this.toastrService.success('Object successfully created.', 'Success!')),
+      tap(() => {
+        this.toastrService.success('Object successfully created.', 'Success!');
+        this.dataChanged.next(undefined);
+      }),
       map(() => undefined),
       catchError((err) => {
         this.toastrService.error(err, 'Error!');
@@ -80,7 +84,10 @@ export class FirestoreDataService {
 
   update(id: string, data: Object): Observable<void> {
     return from(this.getCollection().doc(id).set(data)).pipe(
-      tap(() => this.toastrService.success('Object successfully updated.', 'Success!')),
+      tap(() => {
+        this.toastrService.success('Object successfully updated.', 'Success!');
+        this.dataChanged.next(undefined);
+      }),
       catchError((err) => {
         this.toastrService.error(err, 'Error!');
         return err;
@@ -90,7 +97,10 @@ export class FirestoreDataService {
 
   delete(id: string): Observable<void> {
     return from(this.getCollection().doc(id).delete()).pipe(
-      tap(() => this.toastrService.success('Object successfully removed.', 'Success!')),
+      tap(() => {
+        this.toastrService.success('Object successfully removed.', 'Success!');
+        this.dataChanged.next(undefined);
+      }),
       catchError((err) => {
         this.toastrService.error(err, 'Error!');
         return err;

@@ -15,7 +15,7 @@ export class NavigationComponent {
 
   routeTiles = [
     { label: 'Dashboard', filename: 'dashboard', route: '/dashboard' },
-    { label: 'Places', filename: 'restaurant', route: '/places-overview' },
-    { label: 'Food', filename: 'food', route: '/food-overview' }
+    { label: 'Food', filename: 'food', route: '/food-overview' },
+    { label: 'Places', filename: 'restaurant', route: '/places-overview' }
   ];
 }

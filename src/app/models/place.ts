@@ -2,6 +2,7 @@ export interface Place {
   id: string;
   name: string;
   tags: string[];
+  averageRating: number;
   rating: PlaceRating; // Out of 10, step: 0.5? External rating from google?
   address: PlaceAddress; // Google maps?
   createdAt: Date;

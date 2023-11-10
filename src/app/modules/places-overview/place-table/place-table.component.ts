@@ -1,19 +1,23 @@
 import { Component } from '@angular/core';
-import { FirestoreDataService } from '../../services/firestore-data.service';
+import { FirestoreDataService } from '../../../services/firestore-data.service';
 import { FormBuilder } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreateEditPlaceComponent } from './create-edit-place/create-edit-place.component';
-import { Emoji } from '../../models/emoji';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CreateEditPlaceComponent } from '../create-edit-place/create-edit-place.component';
+import { Emoji } from '../../../models/emoji';
+import { Place } from '../../../models/place';
+import { faEdit, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
-  selector: 'app-places-overview',
-  templateUrl: './places-overview.component.html',
-  styleUrls: ['./places-overview.component.scss']
+  selector: 'app-place-table',
+  templateUrl: './place-table.component.html',
+  styleUrls: ['./place-table.component.scss']
 })
-export class PlacesOverviewComponent {
+export class PlaceTableComponent {
 
   Emoji = Emoji;
+  faEdit = faEdit;
+  faTrashAlt = faTrashAlt;
 
   constructor(
     public firestoreDataService: FirestoreDataService,
@@ -37,7 +41,7 @@ export class PlacesOverviewComponent {
     this.firestoreDataService.delete(id).subscribe();
   }
 
-  goToDetails(id: string): void {
-    this.router.navigate([id], { relativeTo: this.activatedRoute }).then(() => {});
+  goToDetails(item: Place): void {
+    this.router.navigate([item.id], { relativeTo: this.activatedRoute, state: { item } }).then(() => {});
   }
 }

@@ -5,6 +5,7 @@ import { Place } from '../../../models/place';
 import { FirestoreDataService } from '../../../services/firestore-data.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of } from 'rxjs';
+import { getAverageRating } from '../../../shared/utils/rating';
 
 @Component({
   selector: 'app-create-edit-place',
@@ -40,6 +41,7 @@ export class CreateEditPlaceComponent implements OnInit {
         street: this.fb.control<string | undefined>(place?.address?.street),
         streetNumber: this.fb.control<number | undefined>(place?.address?.streetNumber)
       }),
+      averageRating: this.fb.control<number | undefined>(undefined),
       rating: this.fb.group({
         localization: this.fb.control<number>(place?.rating?.localization || defaultRateValue),
         staff: this.fb.control<number>(place?.rating?.staff || defaultRateValue),
@@ -59,6 +61,7 @@ export class CreateEditPlaceComponent implements OnInit {
     if (this.form.valid) {
       const now = new Date();
       this.form.get('changedAt')?.setValue(now);
+      this.form.get('averageRating')?.setValue(getAverageRating(this.form.value.rating));
       if (!this.placeId) {
         this.form.get('createdAt')?.setValue(now);
         saveCall = this.firestoreDataService.create(this.form.value);

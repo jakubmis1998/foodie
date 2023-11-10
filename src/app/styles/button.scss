@@ -1,4 +1,15 @@
+@import "variables";
+
 .btn {
   outline: none;
-  border: none;
+}
+
+.btn-create {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  @extend .f-3x;
 }
