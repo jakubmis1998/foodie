@@ -1,0 +1,13 @@
+<div class="modal-header d-flex align-items-center justify-content-center">
+  <div class="modal-title d-flex align-items-center flex-row">
+    <h5 class="mb-0 me-1">Confirm your decision!</h5>
+    <span class="f-2x">{{ Emoji.red | emoji }}</span>
+  </div>
+</div>
+<div class="modal-body">
+  <p class="m-0">Are you sure you want to delete this {{ itemName }}?</p>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close(false)">Close</button>
+  <button type="button" class="btn btn-primary" (click)="activeModal.close(true)">Confirm</button>
+</div>

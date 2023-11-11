@@ -1,12 +1,9 @@
 <div class="overview">
-  <div class="d-flex flex-column align-items-center">
-    <ng-container *ngIf="!loading">
+  <div class="data-container my-4">
+    <ng-container *ngIf="!loading; else loadingTmpl">
       <ng-container *ngFor="let item of items; let i = index">
         <ng-container *ngTemplateOutlet="itemTemplate; context: getItemContext(item)"></ng-container>
       </ng-container>
-    </ng-container>
-    <ng-container *ngIf="loading">
-      <app-loading></app-loading>
     </ng-container>
   </div>
 
@@ -15,3 +12,7 @@
     <button class="btn btn-outline-primary ms-5" (click)="changePage('next')">></button>
   </div>
 </div>
+
+<ng-template #loadingTmpl>
+  <app-loading></app-loading>
+</ng-template>

@@ -21,6 +21,9 @@ export interface PlaceAddress {
   city: string;
   street: string;
   streetNumber: number;
+  coords: {
+    longitude: number;
+    latitude: number;
+  },
+  distance: number; // Distance from currentPosition to this place
 }
-
-// Google maps api, Google places api

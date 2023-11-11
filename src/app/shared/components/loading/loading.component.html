@@ -1,4 +1,4 @@
 <ng-content></ng-content>
-<div class="spinner-border text-primary" [class.spinner-border-sm]="small" role="status">
+<div class="spinner-border {{ getColorClass() }}" [class.spinner-border-sm]="small" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>

@@ -6,6 +6,7 @@ import { FirestoreDataService } from '../../../services/firestore-data.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of } from 'rxjs';
 import { getAverageRating } from '../../../shared/utils/rating';
+import { LocationService } from '../../../services/location.service';
 
 @Component({
   selector: 'app-create-edit-place',
@@ -23,7 +24,8 @@ export class CreateEditPlaceComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private firestoreDataService: FirestoreDataService,
-    public activeModal: NgbActiveModal
+    public activeModal: NgbActiveModal,
+    private locationService: LocationService
   ) {}
 
   ngOnInit(): void {
@@ -37,9 +39,14 @@ export class CreateEditPlaceComponent implements OnInit {
     this.form = this.fb.group({
       name: this.fb.control<string | undefined>(place?.name, [Validators.required]),
       address: this.fb.group({
-        city: this.fb.control<string | undefined>(place?.address?.city),
-        street: this.fb.control<string | undefined>(place?.address?.street),
-        streetNumber: this.fb.control<number | undefined>(place?.address?.streetNumber)
+        city: this.fb.control<string | undefined>(place?.address?.city, [Validators.required]),
+        street: this.fb.control<string | undefined>(place?.address?.street, [Validators.required]),
+        streetNumber: this.fb.control<number | undefined>(place?.address?.streetNumber),
+        distance: this.fb.control<number | undefined>(place?.address?.distance),
+        coords: this.fb.group({
+          latitude: this.fb.control<number | undefined>(place?.address?.coords?.latitude),
+          longitude: this.fb.control<number | undefined>(place?.address?.coords?.longitude)
+        }),
       }),
       averageRating: this.fb.control<number | undefined>(undefined),
       rating: this.fb.group({
@@ -62,6 +69,16 @@ export class CreateEditPlaceComponent implements OnInit {
       const now = new Date();
       this.form.get('changedAt')?.setValue(now);
       this.form.get('averageRating')?.setValue(getAverageRating(this.form.value.rating));
+
+      // Temporary mocking coordinates
+      const randomLat = Math.floor(Math.random() * (55 - 51 + 1) + 51);
+      const randomLon = Math.floor(Math.random() * (20 - 16 + 1) + 16);
+      this.form.get('address.coords')?.setValue({
+        latitude: randomLat,
+        longitude: randomLon
+      });
+      this.form.get('address.distance')?.setValue(this.locationService.getDistance(this.form.get('address.coords')?.value));
+
       if (!this.placeId) {
         this.form.get('createdAt')?.setValue(now);
         saveCall = this.firestoreDataService.create(this.form.value);

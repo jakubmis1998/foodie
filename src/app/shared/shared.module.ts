@@ -6,18 +6,22 @@ import { PipesModule } from '../pipes/pipes.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DataOverviewComponent } from './components/data-overview/data-overview.component';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 
 @NgModule({
   declarations: [
     LoadingComponent,
-    DataOverviewComponent
+    DataOverviewComponent,
+    ConfirmModalComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    PipesModule
   ],
   exports: [
     LoadingComponent,
     DataOverviewComponent,
+    ConfirmModalComponent,
     NgxStarsModule,
     NgbModule,
     PipesModule,

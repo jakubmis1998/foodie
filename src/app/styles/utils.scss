@@ -1,9 +1,18 @@
+@import "variables";
+
 .cursor-pointer {
   cursor: pointer;
 }
 
 .divider {
   margin: 1rem 0;
-  border-top: 1px solid $gray-300;
+  border-top: 1px solid lightgray;
+  color: $secondary;
   width: 100%;
+  text-align: center;
+}
+
+// ngx-chips => tag-input component
+div.ng2-tag-input--focused {
+  border-color: $primary !important;
 }

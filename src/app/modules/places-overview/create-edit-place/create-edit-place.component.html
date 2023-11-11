@@ -11,7 +11,7 @@
   <app-loading *ngIf="!form"></app-loading>
   <form *ngIf="form" [formGroup]="form">
     <div class="mb-3 row align-items-center">
-      <label for="name" class="col-sm-2 col-form-label">Name</label>
+      <label for="name" class="col-sm-2 col-form-label required">Name</label>
       <div class="col-sm-10">
         <input type="text" formControlName="name" class="form-control" id="name">
         <div *ngIf="isValidField('name')" class="validation-message">
@@ -20,14 +20,14 @@
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="divider">Rating</div>
 
     <div formGroupName="rating">
       <div class="mb-3 row align-items-center">
         <label for="localization" class="col-sm-2 col-form-label">Localization</label>
         <div class="col-sm-10 d-flex justify-content-center">
           <input type="hidden" formControlName="localization" id="localization" class="form-control">
-          <ngx-stars color="#a71aed" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.localization')"
+          <ngx-stars color="#816ddb" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.localization')"
                      (ratingOutput)="setStarValue('rating.localization', $event)">
           </ngx-stars>
         </div>
@@ -36,7 +36,7 @@
         <label for="staff" class="col-sm-2 col-form-label">Staff</label>
         <div class="col-sm-10 d-flex justify-content-center">
           <input type="hidden" formControlName="staff" class="form-control" id="staff">
-          <ngx-stars color="#a71aed" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.staff')"
+          <ngx-stars color="#816ddb" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.staff')"
                      (ratingOutput)="setStarValue('rating.staff', $event)">
           </ngx-stars>
         </div>
@@ -45,7 +45,7 @@
         <label for="comfort" class="col-sm-2 col-form-label">Comfort</label>
         <div class="col-sm-10 d-flex justify-content-center">
           <input type="hidden" formControlName="comfort" class="form-control" id="comfort">
-          <ngx-stars color="#a71aed" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.comfort')"
+          <ngx-stars color="#816ddb" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.comfort')"
                      (ratingOutput)="setStarValue('rating.comfort', $event)">
           </ngx-stars>
         </div>
@@ -54,7 +54,7 @@
         <label for="prices" class="col-sm-2 col-form-label">Prices</label>
         <div class="col-sm-10 d-flex justify-content-center">
           <input type="hidden" formControlName="prices" class="form-control" id="prices">
-          <ngx-stars color="#a71aed" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.prices')"
+          <ngx-stars color="#816ddb" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.prices')"
                      (ratingOutput)="setStarValue('rating.prices', $event)">
           </ngx-stars>
         </div>
@@ -63,26 +63,32 @@
         <label for="cleanliness" class="col-sm-2 col-form-label">Cleanliness</label>
         <div class="col-sm-10 d-flex justify-content-center">
           <input type="hidden" formControlName="cleanliness" class="form-control" id="cleanliness">
-          <ngx-stars color="#a71aed" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.cleanliness')"
+          <ngx-stars color="#816ddb" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.cleanliness')"
                      (ratingOutput)="setStarValue('rating.cleanliness', $event)">
           </ngx-stars>
         </div>
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="divider">Address</div>
 
     <div formGroupName="address">
       <div class="mb-3 row align-items-center">
-        <label for="city" class="col-sm-2 col-form-label">City</label>
+        <label for="city" class="col-sm-2 col-form-label required">City</label>
         <div class="col-sm-10">
           <input type="text" formControlName="city" class="form-control" id="city">
+          <div *ngIf="isValidField('address.city')" class="validation-message">
+            Please provide a city name.
+          </div>
         </div>
       </div>
       <div class="mb-3 row align-items-center">
-        <label for="street" class="col-sm-2 col-form-label">Street</label>
+        <label for="street" class="col-sm-2 col-form-label required">Street</label>
         <div class="col-sm-10">
           <input type="street" formControlName="street" class="form-control" id="street">
+          <div *ngIf="isValidField('address.street')" class="validation-message">
+            Please provide a street name.
+          </div>
         </div>
       </div>
       <div class="mb-3 row align-items-center">
@@ -93,19 +99,16 @@
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="divider">Tags</div>
 
-    <div class="row align-items-center">
-      <label for="name" class="col-sm-2 col-form-label">Tags</label>
-      <div class="col-sm-10">
-        <tag-input formControlName="tags" [modelAsStrings]="true"></tag-input>
-      </div>
+    <div class="col-sm-12">
+      <tag-input formControlName="tags" [modelAsStrings]="true"></tag-input>
     </div>
   </form>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn" (click)="activeModal.close()">Close</button>
-  <button type="button" class="btn btn-outline-primary" [disabled]="(form ? !form.valid : true) || loading" (click)="save()">
-    <app-loading [small]="true" *ngIf="loading"></app-loading> Save
+  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close()">Close</button>
+  <button type="button" class="btn btn-primary" [disabled]="(form ? !form.valid : true) || loading" (click)="save()">
+    <app-loading [small]="true" color="white" *ngIf="loading"></app-loading> Save
   </button>
 </div>

@@ -16,19 +16,30 @@
 <button class="btn btn-primary btn-create" (click)="createPlace()">+</button>
 
 <ng-template #dataItem let-item>
-  <div class="overview-item d-flex flex-column my-3 w-100">
-    <div class="item-header d-flex justify-content-center align-items-center cursor-pointer" (click)="goToDetails(item)">
-      <span class="item-name w-25 f-2x text-center fw-bold">{{ item.averageRating }} / 5.0 {{ Emoji.star | emoji }}</span>
-      <span class="item-name w-50 f-2x text-center text-truncate fw-bold">{{ item.name }}</span>
-      <span class="item-name w-25 text-center">{{ item.changedAt.toDate() | date: "MMM dd, yyyy 'at' HH:mm" }}</span>
+  <div class="overview-item d-flex flex-column px-3">
+    <div class="item-header d-flex justify-content-between pt-3">
+      <fa-icon class="cursor-pointer text-primary f-2x" [icon]="faEdit" (click)="updatePlace(item.id)"></fa-icon>
+      <div class="rating">{{ item.averageRating | number: '0.1' }}</div>
+      <fa-icon class="cursor-pointer text-secondary f-2x" [icon]="faRemove" (click)="deletePlace(item.id)"></fa-icon>
     </div>
 
-    <div class="divider m-0"></div>
+    <div class="item-content d-flex flex-column text-truncate text-center fw-bold my-5">
+      <span class="text-secondary f-2x mb-1">{{ item.name }}</span>
+      <span class="text-secondary">{{ item.address.city }}, {{ item.address.street }}</span>
+    </div>
 
-    <div class="item-content d-flex justify-content-between align-items-center mx-3">
-      <fa-icon class="cursor-pointer f-3x text-primary" [icon]="faEdit" (click)="updatePlace(item.id)"></fa-icon>
-      item content
-      <fa-icon class="cursor-pointer f-3x text-danger" [icon]="faTrashAlt" (click)="deletePlace(item.id)"></fa-icon>
+    <div class="item-footer text-center pb-3">
+      <div class="d-flex justify-content-between align-items-center mb-2 px-4 mx-3">
+        <div class="property">
+          <div class="fw-bold text-primary">23</div>
+          <span class="small text-secondary">Dishes</span>
+        </div>
+        <div class="property">
+          <div class="fw-bold text-primary">{{ item.address.distance | number: '1.0-2' }} km</div>
+          <span class="small text-secondary">Distance</span>
+        </div>
+      </div>
+      <button class="btn btn-primary view-btn" (click)="goToDetails(item)">View details</button>
     </div>
   </div>
 </ng-template>

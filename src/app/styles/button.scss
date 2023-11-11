@@ -2,14 +2,39 @@
 
 .btn {
   outline: none;
+
+  &[class*="primary"] {
+    color: white !important;
+
+    &[class*="outline"] {
+      color: $primary !important;
+
+      &:hover,
+      &:active {
+        color: white !important;
+      }
+    }
+  }
+
+  &[class*="secondary"] {
+    &[class*="outline"] {
+      &:hover,
+      &:active {
+        color: white !important;
+      }
+    }
+  }
 }
 
 .btn-create {
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   right: 2rem;
   bottom: 2rem;
-  width: 4rem;
-  height: 4rem;
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 50%;
   @extend .f-3x;
 }

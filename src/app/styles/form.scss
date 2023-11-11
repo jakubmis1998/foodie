@@ -15,3 +15,9 @@ input, textarea, select {
   font-size: small;
   margin-top: .3rem;
 }
+
+label.required:after {
+  content:" *";
+  color: $primary;
+  text-wrap: nowrap;
+}
