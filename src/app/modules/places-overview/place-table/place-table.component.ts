@@ -8,7 +8,6 @@ import { Place } from '../../../models/place';
 import { faEdit } from '@fortawesome/free-regular-svg-icons';
 import { faRemove } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
-import { LocationService } from '../../../services/location.service';
 
 @Component({
   selector: 'app-place-table',
@@ -25,8 +24,7 @@ export class PlaceTableComponent {
     public firestoreDataService: FirestoreDataService,
     private modalService: NgbModal,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private locationService: LocationService
+    private activatedRoute: ActivatedRoute
   ) {}
 
   createPlace(): void {

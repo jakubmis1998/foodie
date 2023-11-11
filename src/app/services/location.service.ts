@@ -8,13 +8,12 @@ export class LocationService {
 
   currentLocation: GeolocationCoordinates;
 
-  constructor() {
+  init(): void {
     this.updateCurrentLocation();
   }
 
   getDistance(point: { latitude: number; longitude: number }): number {
     const currentPosition = this.getCurrentLocation();
-
     return haversine({ latitude: currentPosition.latitude, longitude: currentPosition.longitude }, point as any) / 1000;
   }
 

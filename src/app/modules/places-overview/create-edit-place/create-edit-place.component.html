@@ -11,8 +11,8 @@
   <app-loading *ngIf="!form"></app-loading>
   <form *ngIf="form" [formGroup]="form">
     <div class="mb-3 row align-items-center">
-      <label for="name" class="col-sm-2 col-form-label required">Name</label>
-      <div class="col-sm-10">
+      <label for="name" class="col-sm-3 col-form-label required">Name</label>
+      <div class="col-sm-9">
         <input type="text" formControlName="name" class="form-control" id="name">
         <div *ngIf="isValidField('name')" class="validation-message">
           Please provide a place name.
@@ -70,34 +70,18 @@
       </div>
     </div>
 
-    <div class="divider">Address</div>
+    <ng-container *ngIf="!placeId">
+      <div class="divider">Location</div>
 
-    <div formGroupName="address">
       <div class="mb-3 row align-items-center">
-        <label for="city" class="col-sm-2 col-form-label required">City</label>
-        <div class="col-sm-10">
-          <input type="text" formControlName="city" class="form-control" id="city">
-          <div *ngIf="isValidField('address.city')" class="validation-message">
-            Please provide a city name.
+        <div class="col-sm-12">
+          <input #address type="text" formControlName="address" class="form-control" id="address" placeholder="Search place..." autocomplete="off">
+          <div *ngIf="isValidField('address')" class="validation-message">
+            Please choose a place.
           </div>
         </div>
       </div>
-      <div class="mb-3 row align-items-center">
-        <label for="street" class="col-sm-2 col-form-label required">Street</label>
-        <div class="col-sm-10">
-          <input type="street" formControlName="street" class="form-control" id="street">
-          <div *ngIf="isValidField('address.street')" class="validation-message">
-            Please provide a street name.
-          </div>
-        </div>
-      </div>
-      <div class="mb-3 row align-items-center">
-        <label for="streetNumber" class="col-sm-2 col-form-label">Number</label>
-        <div class="col-sm-10">
-          <input type="number" formControlName="streetNumber" class="form-control" id="streetNumber">
-        </div>
-      </div>
-    </div>
+    </ng-container>
 
     <div class="divider">Tags</div>
 
@@ -107,7 +91,7 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close()">Close</button>
+  <button type="button" class="btn btn-outline-secondary" ngbAutofocus (click)="activeModal.close()">Close</button>
   <button type="button" class="btn btn-primary" [disabled]="(form ? !form.valid : true) || loading" (click)="save()">
     <app-loading [small]="true" color="white" *ngIf="loading"></app-loading> Save
   </button>

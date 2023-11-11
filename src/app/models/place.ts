@@ -3,8 +3,8 @@ export interface Place {
   name: string;
   tags: string[];
   averageRating: number;
-  rating: PlaceRating; // Out of 10, step: 0.5? External rating from google?
-  address: PlaceAddress; // Google maps?
+  rating: PlaceRating;
+  address: { [ key: string ]: any };
   createdAt: Date;
   changedAt: Date;
 }
@@ -15,15 +15,4 @@ export interface PlaceRating {
   comfort: number;
   prices: number;
   cleanliness: number;
-}
-
-export interface PlaceAddress {
-  city: string;
-  street: string;
-  streetNumber: number;
-  coords: {
-    longitude: number;
-    latitude: number;
-  },
-  distance: number; // Distance from currentPosition to this place
 }

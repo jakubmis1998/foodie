@@ -19,7 +19,10 @@
   <div class="overview-item d-flex flex-column px-3">
     <div class="item-header d-flex justify-content-between pt-3">
       <fa-icon class="cursor-pointer text-primary f-2x" [icon]="faEdit" (click)="updatePlace(item.id)"></fa-icon>
-      <div class="rating">{{ item.averageRating | number: '0.1' }}</div>
+      <div class="rating px-2">
+        {{ item.averageRating | number: '0.1' }}
+        <span class="ms-1">{{ Emoji.star | emoji }}</span>
+      </div>
       <fa-icon class="cursor-pointer text-secondary f-2x" [icon]="faRemove" (click)="deletePlace(item.id)"></fa-icon>
     </div>
 
@@ -29,14 +32,21 @@
     </div>
 
     <div class="item-footer text-center pb-3">
-      <div class="d-flex justify-content-between align-items-center mb-2 px-4 mx-3">
-        <div class="property">
+      <div class="d-flex justify-content-between align-items-center mb-2 px-2">
+        <div class="d-block w-25">
           <div class="fw-bold text-primary">23</div>
           <span class="small text-secondary">Dishes</span>
         </div>
-        <div class="property">
+        <div class="d-block w-auto">
           <div class="fw-bold text-primary">{{ item.address.distance | number: '1.0-2' }} km</div>
           <span class="small text-secondary">Distance</span>
+        </div>
+        <div class="d-block w-25">
+          <div class="d-flex justify-content-center fw-bold text-primary">
+            {{ 4.3 | number: '0.1' }}
+            <span>{{ Emoji.star | emoji }}</span>
+          </div>
+          <span class="small text-secondary">Food</span>
         </div>
       </div>
       <button class="btn btn-primary view-btn" (click)="goToDetails(item)">View details</button>
