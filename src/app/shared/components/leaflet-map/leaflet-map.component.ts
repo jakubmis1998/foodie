@@ -20,7 +20,7 @@ export class LeafletMapComponent implements OnInit {
     this.locationService.updateCurrentLocation().subscribe(currentPos => {
       this.options = {
         layers: [
-          tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }),
+          tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 20 }),
           circle(latLng(this.coords.lat, this.coords.lon), { radius: 5, color: 'purple' }),
           marker(latLng(this.coords.lat, this.coords.lon), {
             icon: icon({
@@ -28,7 +28,8 @@ export class LeafletMapComponent implements OnInit {
               iconAnchor: new Point(currentPos.latitude - 28, currentPos.longitude + 22),
               iconSize: [50, 50],
               iconUrl: 'assets/markers/purple-marker.svg',
-              shadowUrl: undefined
+              shadowUrl: undefined,
+              iconRetinaUrl: 'assets/markers/purple-marker.svg'
             } as IconOptions)
           }),
           circle(latLng(currentPos.latitude, currentPos.longitude), { radius: 5, color: 'red' }),
@@ -38,12 +39,13 @@ export class LeafletMapComponent implements OnInit {
               iconAnchor: new Point(currentPos.latitude - 28, currentPos.longitude + 22),
               iconSize: [50, 50],
               iconUrl: 'assets/markers/red-marker.svg',
-              shadowUrl: undefined
+              shadowUrl: undefined,
+              iconRetinaUrl: 'assets/markers/red-marker.svg'
             } as IconOptions)
           })
         ],
         zoom: 18,
-        maxZoom: 18,
+        maxZoom: 20,
         center: latLng(this.coords.lat, this.coords.lon)
       };
     });
