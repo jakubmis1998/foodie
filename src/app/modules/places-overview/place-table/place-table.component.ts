@@ -9,6 +9,7 @@ import { faEdit } from '@fortawesome/free-regular-svg-icons';
 import { faRemove } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { LocationService } from '../../../services/location.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-place-table',
@@ -55,7 +56,7 @@ export class PlaceTableComponent {
     this.router.navigate([place.id], { relativeTo: this.activatedRoute }).then(() => {});
   }
 
-  getItemDistance(item: Place): number {
+  getItemDistance(item: Place): Observable<number> {
     if (!Object.keys(this.cachedDistances).length || !this.cachedDistances[item.id]) {
       this.cachedDistances[item.id] = this.locationService.getDistance({ latitude: item.address.lat, longitude: item.address.lon });
     }
@@ -63,7 +64,7 @@ export class PlaceTableComponent {
   }
 
   refresh(): void {
-    this.locationService.updateCurrentLocation();
+    this.locationService.updateCurrentLocation().subscribe();
     this.cachedDistances = {};
   }
 }

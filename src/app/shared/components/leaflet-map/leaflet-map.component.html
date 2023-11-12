@@ -1,0 +1,11 @@
+<ng-container *ngIf="!options; else mapTemplate">
+  <app-loading></app-loading>
+</ng-container>
+
+<ng-template #mapTemplate>
+  <div class="leaflet-map"
+       style="height: 400px; width: 85vw"
+       leaflet
+       [leafletOptions]="options">
+  </div>
+</ng-template>

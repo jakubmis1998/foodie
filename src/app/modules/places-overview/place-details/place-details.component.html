@@ -1,5 +1,5 @@
-<div class="d-flex flex-column justify-content-center align-items-center mb-5">
-  <button class="btn btn-outline-secondary mb-3" type="button" (click)="goBack()">Go back</button>
+<div class="d-flex flex-column justify-content-center align-items-center my-3">
+  <button class="btn btn-outline-secondary mb-5" type="button" (click)="goBack()">Go back</button>
   <app-loading *ngIf="loading"></app-loading>
 
   <ng-container *ngIf="!loading">
@@ -8,13 +8,10 @@
     <div class="text-center text-secondary mb-2">{{ format(place.address.type) | uppercase }}</div>
     <div class="text-center text-secondary">{{ place.address.display_name }}</div>
 
-    <highcharts-chart
-      class="my-4"
-      [Highcharts]="Highcharts"
-      [options]="options"
-    ></highcharts-chart>
+    <div class="divider text-center text-secondary my-3">Map</div>
+    <app-leaflet-map class="mb-3" [coords]="place.address"></app-leaflet-map>
 
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center w-100">
       <div class="d-flex flex-column w-50 me-2">
         <div class="divider text-center text-secondary">
           <ng-container *ngIf="place.tags && place.tags.length > 0">Tags</ng-container>
@@ -40,12 +37,16 @@
       </div>
     </div>
 
-    <div class="divider text-center text-secondary">Map</div>
-    MAPA
+    <div class="divider text-center text-secondary my-3">Rating chart</div>
+    <highcharts-chart
+      class="mb-5"
+      [Highcharts]="Highcharts"
+      [options]="options"
+    ></highcharts-chart>
 
     <span><strong>Created at:</strong> {{ place.createdAt | date: 'MMMM d y, HH:mm:ss (EEEE)' }}</span>
     <span><strong>Last update at:</strong> {{ place.changedAt | date: 'MMMM d y, HH:mm:ss (EEEE)' }}</span>
   </ng-container>
 
-  <button class="btn btn-outline-secondary mt-3" type="button" (click)="goBack()">Go back</button>
+  <button class="btn btn-outline-secondary mt-5" type="button" (click)="goBack()">Go back</button>
 </div>

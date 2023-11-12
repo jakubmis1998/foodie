@@ -23,7 +23,7 @@ export class FirestoreDataService {
   ) {}
 
   getAll(
-    latestDoc?: QueryDocumentSnapshot<DocumentData> | undefined, reversed = false, sortingSettings = new SortingSettings(), pageSize = 6
+    latestDoc?: QueryDocumentSnapshot<DocumentData> | undefined, reversed = false, sortingSettings = new SortingSettings(), pageSize = 9
   ): Observable<ListResponse> {
     const call = this.getCollection().orderBy(new FieldPath(...sortingSettings.column), sortingSettings.direction);
 

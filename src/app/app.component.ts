@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     firebase.initializeApp(environment.firebase);
 
-    this.locationService.updateCurrentLocation();
+    this.locationService.updateCurrentLocation().subscribe();
     this.fireAuth.authState.subscribe((user: User) => this.authService.userChanged(user));
   }
 }

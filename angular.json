@@ -20,7 +20,8 @@
             "allowedCommonJsDependencies": [
               "highcharts",
               "haversine-distance",
-              "autocompleter"
+              "autocompleter",
+              "leaflet"
             ],
             "outputPath": "dist/foodie",
             "index": "src/index.html",
@@ -36,7 +37,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/ngx-toastr/toastr.css"
+              "./node_modules/ngx-toastr/toastr.css",
+              "./node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": [
               "./node_modules/@popperjs/core/dist/umd/popper.min.js",

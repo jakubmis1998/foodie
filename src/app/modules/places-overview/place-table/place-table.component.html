@@ -38,7 +38,7 @@
           <span class="small text-secondary">Dishes</span>
         </div>
         <div class="d-block w-auto">
-          <div class="fw-bold text-primary">{{ getItemDistance(item) | number: '1.0-2' }} km</div>
+          <div class="fw-bold text-primary">{{ getItemDistance(item) | async | number: '1.0-2' }} km</div>
           <span class="small text-secondary">Distance</span>
         </div>
         <div class="d-block w-25">

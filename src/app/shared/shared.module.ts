@@ -8,22 +8,27 @@ import { DataOverviewComponent } from './components/data-overview/data-overview.
 import { HighchartsChartModule } from 'highcharts-angular';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { LeafletMapComponent } from './components/leaflet-map/leaflet-map.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 @NgModule({
   declarations: [
     LoadingComponent,
     DataOverviewComponent,
-    ConfirmModalComponent
+    ConfirmModalComponent,
+    LeafletMapComponent
   ],
   imports: [
     CommonModule,
     PipesModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    LeafletModule
   ],
   exports: [
     LoadingComponent,
     DataOverviewComponent,
     ConfirmModalComponent,
+    LeafletMapComponent,
     NgxStarsModule,
     NgbModule,
     PipesModule,
