@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<app-data-overview [itemTemplate]="dataItem"></app-data-overview>
+<app-data-overview [itemTemplate]="dataItem" [refreshCallback]="refresh.bind(this)"></app-data-overview>
 
 <button class="btn btn-primary btn-create" (click)="createPlace()">+</button>
 
@@ -28,7 +28,7 @@
 
     <div class="item-content d-flex flex-column text-truncate text-center fw-bold my-5">
       <span class="text-secondary f-2x mb-1">{{ item.name }}</span>
-      <span class="text-secondary">{{ item.address.city }}, {{ item.address.street }}</span>
+      <span class="text-secondary">{{ item.address.address.city }}, {{ item.address.address.road }} {{ item.address.address.house_number }}</span>
     </div>
 
     <div class="item-footer text-center pb-3">
@@ -38,7 +38,7 @@
           <span class="small text-secondary">Dishes</span>
         </div>
         <div class="d-block w-auto">
-          <div class="fw-bold text-primary">{{ item.address.distance | number: '1.0-2' }} km</div>
+          <div class="fw-bold text-primary">{{ getItemDistance(item) | number: '1.0-2' }} km</div>
           <span class="small text-secondary">Distance</span>
         </div>
         <div class="d-block w-25">

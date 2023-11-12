@@ -9,6 +9,7 @@
 
   <div class="pagination-btn d-flex justify-content-center">
     <button class="btn btn-outline-primary me-5" (click)="changePage('prev')"><</button>
+    <fa-icon *ngIf="refreshCallback" class="cursor-pointer text-primary f-2x" [icon]="faRefresh" (click)="refresh()"></fa-icon>
     <button class="btn btn-outline-primary ms-5" (click)="changePage('next')">></button>
   </div>
 </div>

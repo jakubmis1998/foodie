@@ -17,7 +17,7 @@ export class PlaceDetailsComponent implements OnInit {
   options: Highcharts.Options;
 
   loading = true;
-  item: Place;
+  place: Place;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -29,13 +29,20 @@ export class PlaceDetailsComponent implements OnInit {
   ngOnInit(): void {
     const placeId = this.activatedRoute.snapshot.paramMap.get('id')!;
     this.firestoreDataService.get(placeId).subscribe(place => {
-      this.item = place as Place;
-      this.setOptions();
+      this.place = place as Place;
+      this.setChartOptions();
       this.loading = false;
     });
   }
 
-  setOptions(): void {
+  getExtras(field = 'extratags'): [string, unknown][] {
+    return Object.entries(this.place?.address?.[field]).map(entry => {
+      entry[0] = this.format(entry[0]);
+      return entry;
+    });
+  }
+
+  setChartOptions(): void {
     this.options = {
       accessibility: {
         enabled: false
@@ -46,12 +53,10 @@ export class PlaceDetailsComponent implements OnInit {
       },
       title: {
         text: 'Rating',
-      },
-      subtitle: {
-        text: this.item.name
+        margin: 25
       },
       xAxis: {
-        categories: ['Cleanliness', 'Comfort', 'Localization', 'Prices', 'Staff', 'Average'],
+        categories: ['Localization', 'Staff', 'Comfort', 'Prices', 'Cleanliness', 'Average'],
         crosshair: true
       },
       yAxis: {
@@ -63,17 +68,30 @@ export class PlaceDetailsComponent implements OnInit {
       series: [
         {
           name: 'Rating',
+          color: 'orange',
+          dataLabels: {
+            enabled: true,
+            crop: false,
+            overflow: 'allow',
+            style: {
+              fontSize: '15'
+            }
+          },
           data: [
-            this.item.rating.cleanliness,
-            this.item.rating.comfort,
-            this.item.rating.localization,
-            this.item.rating.prices,
-            this.item.rating.staff,
-            this.item.averageRating
+            this.place.rating.localization,
+            this.place.rating.staff,
+            this.place.rating.comfort,
+            this.place.rating.prices,
+            this.place.rating.cleanliness,
+            { y: this.place.averageRating, color: '#816ddb' }
           ]
         }
       ]
     } as Highcharts.Options;
+  }
+
+  format(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1).replace('_', ' ')
   }
 
   goBack(): void {

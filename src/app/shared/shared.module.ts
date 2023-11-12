@@ -7,6 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DataOverviewComponent } from './components/data-overview/data-overview.component';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.
   ],
   imports: [
     CommonModule,
-    PipesModule
+    PipesModule,
+    FontAwesomeModule
   ],
   exports: [
     LoadingComponent,
@@ -25,7 +27,8 @@ import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.
     NgxStarsModule,
     NgbModule,
     PipesModule,
-    HighchartsChartModule
+    HighchartsChartModule,
+    FontAwesomeModule
   ]
 })
 export class SharedModule { }

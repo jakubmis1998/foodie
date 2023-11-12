@@ -7,7 +7,6 @@ import firebase from "firebase/compat/app";
 import 'firebase/compat/firestore';
 import { environment } from '../environments/environment';
 import { LocationService } from './services/location.service';
-import { OpenStreetService } from './services/openstreet.service';
 
 @Component({
   selector: 'app-root',
@@ -19,22 +18,14 @@ export class AppComponent implements OnInit {
   constructor(
     private fireAuth: AngularFireAuth,
     private authService: AuthService,
-    private locationService: LocationService,
-    private osmService: OpenStreetService
+    private locationService: LocationService
   ) {}
 
 
   ngOnInit(): void {
     firebase.initializeApp(environment.firebase);
 
-    this.osmService.search("Toruń Manekin").subscribe(
-      result => console.log(result)
-    )
-
-    this.locationService.init();
-    this.fireAuth.authState.subscribe((user: User) => {
-      this.authService.userChanged(user);
-      console.log("authState changed. Email: ", user);
-    });
+    this.locationService.updateCurrentLocation();
+    this.fireAuth.authState.subscribe((user: User) => this.authService.userChanged(user));
   }
 }

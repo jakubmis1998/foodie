@@ -1,10 +1,12 @@
+import { ObjectType } from './utils';
+
 export interface Place {
   id: string;
   name: string;
   tags: string[];
   averageRating: number;
   rating: PlaceRating;
-  address: { [ key: string ]: any };
+  address: ObjectType;
   createdAt: Date;
   changedAt: Date;
 }

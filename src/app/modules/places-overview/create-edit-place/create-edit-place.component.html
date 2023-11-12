@@ -10,9 +10,21 @@
 <div class="modal-body d-flex justify-content-center">
   <app-loading *ngIf="!form"></app-loading>
   <form *ngIf="form" [formGroup]="form">
+
+    <ng-container *ngIf="!placeId">
+      <div class="mb-3 row align-items-center">
+        <div class="col-sm-12">
+          <input #address type="text" formControlName="address" class="form-control" id="address" placeholder="Search place..." autocomplete="off">
+          <div *ngIf="isValidField('address')" class="validation-message">
+            Please choose a place.
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
     <div class="mb-3 row align-items-center">
-      <label for="name" class="col-sm-3 col-form-label required">Name</label>
-      <div class="col-sm-9">
+      <label for="name" class="col-sm-2 col-form-label required">Name</label>
+      <div class="col-sm-10">
         <input type="text" formControlName="name" class="form-control" id="name">
         <div *ngIf="isValidField('name')" class="validation-message">
           Please provide a place name.
@@ -69,19 +81,6 @@
         </div>
       </div>
     </div>
-
-    <ng-container *ngIf="!placeId">
-      <div class="divider">Location</div>
-
-      <div class="mb-3 row align-items-center">
-        <div class="col-sm-12">
-          <input #address type="text" formControlName="address" class="form-control" id="address" placeholder="Search place..." autocomplete="off">
-          <div *ngIf="isValidField('address')" class="validation-message">
-            Please choose a place.
-          </div>
-        </div>
-      </div>
-    </ng-container>
 
     <div class="divider">Tags</div>
 

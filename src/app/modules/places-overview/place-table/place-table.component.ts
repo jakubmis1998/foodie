@@ -8,6 +8,7 @@ import { Place } from '../../../models/place';
 import { faEdit } from '@fortawesome/free-regular-svg-icons';
 import { faRemove } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { LocationService } from '../../../services/location.service';
 
 @Component({
   selector: 'app-place-table',
@@ -20,11 +21,14 @@ export class PlaceTableComponent {
   faEdit = faEdit;
   faRemove = faRemove;
 
+  cachedDistances = {};
+
   constructor(
     public firestoreDataService: FirestoreDataService,
     private modalService: NgbModal,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private locationService: LocationService
   ) {}
 
   createPlace(): void {
@@ -47,7 +51,19 @@ export class PlaceTableComponent {
     });
   }
 
-  goToDetails(item: Place): void {
-    this.router.navigate([item.id], { relativeTo: this.activatedRoute, state: { item } }).then(() => {});
+  goToDetails(place: Place): void {
+    this.router.navigate([place.id], { relativeTo: this.activatedRoute }).then(() => {});
+  }
+
+  getItemDistance(item: Place): number {
+    if (!Object.keys(this.cachedDistances).length || !this.cachedDistances[item.id]) {
+      this.cachedDistances[item.id] = this.locationService.getDistance({ latitude: item.address.lat, longitude: item.address.lon });
+    }
+    return this.cachedDistances[item.id];
+  }
+
+  refresh(): void {
+    this.locationService.updateCurrentLocation();
+    this.cachedDistances = {};
   }
 }

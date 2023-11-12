@@ -8,10 +8,6 @@ export class LocationService {
 
   currentLocation: GeolocationCoordinates;
 
-  init(): void {
-    this.updateCurrentLocation();
-  }
-
   getDistance(point: { latitude: number; longitude: number }): number {
     const currentPosition = this.getCurrentLocation();
     return haversine({ latitude: currentPosition.latitude, longitude: currentPosition.longitude }, point as any) / 1000;
@@ -24,14 +20,14 @@ export class LocationService {
     return this.currentLocation;
   }
 
-  private updateCurrentLocation(): void {
+  updateCurrentLocation(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         position => this.currentLocation = position.coords,
         error => alert(error)
       );
     } else {
-      alert("Geolocation is not supported by this browser.");
+      alert('Geolocation is not supported by this browser.');
     }
   }
 }

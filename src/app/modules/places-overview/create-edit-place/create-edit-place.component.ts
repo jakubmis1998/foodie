@@ -49,8 +49,8 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
   initAutocomplete(): void {
     const input = document.getElementById('address')! as HTMLInputElement;
     this.autocomplete = autocomplete({
-      minLength: 3,
       input,
+      minLength: 3,
       emptyMsg: 'No places found',
       debounceWaitMs: 1000,
       fetch: (text: string, update: (items: any[]) => void) => {
@@ -59,7 +59,6 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
         });
       },
       render: (item: any, currentValue: any) => {
-        console.log(12341, item);
         const div = document.createElement('div');
         const displayItems = item.display_name.split(', ') as string[];
         div.textContent = displayItems.slice(0, displayItems.length - 3).join(', ');
@@ -67,6 +66,7 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
       },
       onSelect: (item: any) => {
         this.selectedPlace = item;
+        this.form.get('name')?.setValue(item.name);
         const displayItems = item.display_name.split(', ') as string[];
         input.value = displayItems.slice(0, displayItems.length - 3).join(', ');
       },
@@ -105,10 +105,6 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
       this.form.get('changedAt')?.setValue(now);
       this.form.get('averageRating')?.setValue(getAverageRating(this.form.value.rating));
 
-      // Naprawić distance - powinno sie aktualizowac zawsze, gdy wchodzę na overview / naciskam refresh
-      // this.form.get('address.distance')?.setValue(this.locationService.getDistance(this.form.get('address.coords')?.value));
-
-      console.log(this.form.value);
       if (!this.placeId) {
         this.form.get('createdAt')?.setValue(now);
         saveCall = this.firestoreDataService.create(this.form.value);

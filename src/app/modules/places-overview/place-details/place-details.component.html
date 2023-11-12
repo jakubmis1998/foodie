@@ -1,24 +1,51 @@
 <div class="d-flex flex-column justify-content-center align-items-center mb-5">
+  <button class="btn btn-outline-secondary mb-3" type="button" (click)="goBack()">Go back</button>
   <app-loading *ngIf="loading"></app-loading>
+
   <ng-container *ngIf="!loading">
+
+    <h2 class="text-secondary">{{ place.name }}</h2>
+    <div class="text-center text-secondary mb-2">{{ format(place.address.type) | uppercase }}</div>
+    <div class="text-center text-secondary">{{ place.address.display_name }}</div>
+
     <highcharts-chart
+      class="my-4"
       [Highcharts]="Highcharts"
       [options]="options"
     ></highcharts-chart>
 
-    <div class="divider text-center text-secondary">
-      <ng-container *ngIf="item.tags && item.tags.length > 0">Tags</ng-container>
-      <ng-container *ngIf="!item.tags || item.tags?.length === 0">No tags added</ng-container>
-    </div>
+    <div class="d-flex justify-content-center">
+      <div class="d-flex flex-column w-50 me-2">
+        <div class="divider text-center text-secondary">
+          <ng-container *ngIf="place.tags && place.tags.length > 0">Tags</ng-container>
+          <ng-container *ngIf="!place.tags || place.tags?.length === 0">No tags added</ng-container>
+        </div>
+        <div *ngIf="place.tags && place.tags.length > 0" class="tags d-flex justify-content-center flex-wrap">
+          <div class="tag me-3 p-2 my-1" *ngFor="let tag of place.tags">
+            {{ tag }}
+          </div>
+        </div>
+      </div>
 
-    <div *ngIf="item.tags && item.tags.length > 0" class="tags d-flex justify-content-center w-50 flex-wrap">
-      <div class="tag me-3 p-2 my-1" *ngFor="let tag of item.tags">
-        {{ tag }}
+      <div class="d-flex flex-column w-50 ms-2">
+        <div class="divider text-center text-secondary">
+          <ng-container *ngIf="place.address.extratags">Extra tags</ng-container>
+          <ng-container *ngIf="!place.address.extratags">No extra tags</ng-container>
+        </div>
+        <div *ngIf="place.address.extratags">
+          <div class="extra" *ngFor="let extraTag of getExtras()">
+            <strong>{{ extraTag[0] }}:</strong> {{ extraTag[1] }}
+          </div>
+        </div>
       </div>
     </div>
 
-    <pre>{{ item | json }}</pre>
+    <div class="divider text-center text-secondary">Map</div>
+    MAPA
+
+    <span><strong>Created at:</strong> {{ place.createdAt | date: 'MMMM d y, HH:mm:ss (EEEE)' }}</span>
+    <span><strong>Last update at:</strong> {{ place.changedAt | date: 'MMMM d y, HH:mm:ss (EEEE)' }}</span>
   </ng-container>
 
-  <button class="btn btn-outline-secondary" type="button" (click)="goBack()">go back</button>
+  <button class="btn btn-outline-secondary mt-3" type="button" (click)="goBack()">Go back</button>
 </div>

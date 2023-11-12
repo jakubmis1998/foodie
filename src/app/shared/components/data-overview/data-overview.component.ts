@@ -2,8 +2,9 @@ import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core'
 import { FirestoreDataService } from '../../../services/firestore-data.service';
 import { Place } from '../../../models/place';
 import { DocumentData, QueryDocumentSnapshot } from '../../../models/firebaseModel';
-import { Object } from '../../../models/utils';
+import { ObjectType } from '../../../models/utils';
 import { Subscription } from 'rxjs';
+import { faRefresh } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-data-overview',
@@ -13,8 +14,10 @@ import { Subscription } from 'rxjs';
 export class DataOverviewComponent implements OnInit, OnDestroy {
 
   @Input() itemTemplate: TemplateRef<any>;
+  @Input() refreshCallback: () => void;
 
-  items: Object[];
+  faRefresh = faRefresh;
+  items: ObjectType[];
   docs: QueryDocumentSnapshot<DocumentData>[];
   loading = true;
   dataChangedSubscription: Subscription;
@@ -41,8 +44,13 @@ export class DataOverviewComponent implements OnInit, OnDestroy {
     }, () => this.loading = false);
   }
 
-  getItemContext(item: Object): { $implicit: Object } {
+  getItemContext(item: ObjectType): { $implicit: ObjectType } {
     return { $implicit: item };
+  }
+
+  refresh(): void {
+    this.refreshCallback();
+    this.changePage();
   }
 
   ngOnDestroy(): void {

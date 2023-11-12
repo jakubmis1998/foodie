@@ -9,7 +9,6 @@ import { TagInputModule } from 'ngx-chips';
 import { SharedModule } from '../../shared/shared.module';
 import { PlaceDetailsComponent } from './place-details/place-details.component';
 import { PlaceTableComponent } from './place-table/place-table.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -24,8 +23,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     RouterModule.forChild(placesOverviewRoutes),
     FormsModule,
     ReactiveFormsModule,
-    SharedModule,
-    FontAwesomeModule
+    SharedModule
   ]
 })
 export class PlacesOverviewModule { }

@@ -19,7 +19,8 @@
           "options": {
             "allowedCommonJsDependencies": [
               "highcharts",
-              "haversine-distance"
+              "haversine-distance",
+              "autocompleter"
             ],
             "outputPath": "dist/foodie",
             "index": "src/index.html",

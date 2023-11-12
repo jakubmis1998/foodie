@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore'; // Required for side-effects
 import { CollectionReference, DocumentData, QueryDocumentSnapshot } from '../models/firebaseModel';
-import { ListResponse, Object } from '../models/utils';
+import { ListResponse, ObjectType } from '../models/utils';
 import { SortingSettings } from '../models/sort';
 import FieldPath = firebase.firestore.FieldPath;
 
@@ -39,9 +39,12 @@ export class FirestoreDataService {
         return {
           docs: data.docs,
           items: data.docs.map(doc => {
+            const docData = doc.data();
+            docData.createdAt = docData.createdAt.toDate();
+            docData.changedAt = docData.changedAt.toDate();
             return {
               id: doc.id,
-              ...doc.data()
+              ...docData
             };
           })
         };
@@ -58,9 +61,14 @@ export class FirestoreDataService {
     ) as Observable<ListResponse>;
   }
 
-  get(id: string): Observable<Object> {
+  get(id: string): Observable<ObjectType> {
     return from(this.getCollection().doc(id).get()).pipe(
       map(doc => doc.data() as DocumentData),
+      map(doc => {
+        doc.createdAt = doc.createdAt.toDate();
+        doc.changedAt = doc.changedAt.toDate();
+        return doc;
+      }),
       catchError((err) => {
         this.toastrService.error(err, 'Error!');
         return err;
@@ -68,7 +76,7 @@ export class FirestoreDataService {
     ) as Observable<DocumentData>;
   }
 
-  create(data: Object): Observable<void> {
+  create(data: ObjectType): Observable<void> {
     return from(this.getCollection().add(data)).pipe(
       tap(() => {
         this.toastrService.success('Object successfully created.', 'Success!');
@@ -82,7 +90,7 @@ export class FirestoreDataService {
     ) as Observable<void>;
   }
 
-  update(id: string, data: Object): Observable<void> {
+  update(id: string, data: ObjectType): Observable<void> {
     return from(this.getCollection().doc(id).set(data)).pipe(
       tap(() => {
         this.toastrService.success('Object successfully updated.', 'Success!');
