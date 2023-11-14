@@ -9,7 +9,7 @@
     <div class="text-center text-secondary">{{ place.address.display_name }}</div>
 
     <div class="divider text-center text-secondary my-3">Map</div>
-    <app-leaflet-map class="mb-3" [coords]="place.address"></app-leaflet-map>
+    <app-leaflet-map [coords]="place.address"></app-leaflet-map>
 
     <div class="d-flex justify-content-center w-100">
       <div class="d-flex flex-column w-50 me-2">
