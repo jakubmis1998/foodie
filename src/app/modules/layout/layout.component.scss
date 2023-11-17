@@ -1,3 +1,5 @@
+@import "src/app/styles/variables";
+
 .layout-body {
   background: white;
   width: 100vw;
@@ -6,7 +8,7 @@
   overflow-x: hidden;
 
   .content {
-    background-color: #f2f2ff;
+    background-color: $background-content;
     border-top-left-radius: 4rem;
     border-top-right-radius: 4rem;
     box-shadow: rgba(100, 100, 100) 0 3px 8px;

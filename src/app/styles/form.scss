@@ -21,3 +21,13 @@ label.required:after {
   color: $primary;
   text-wrap: nowrap;
 }
+
+.search-field {
+  width: 70%;
+  select {
+    width: auto;
+  }
+  input {
+    width: 100%;
+  }
+}

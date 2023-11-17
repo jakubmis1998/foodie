@@ -6,7 +6,7 @@ import { CreateEditPlaceComponent } from '../create-edit-place/create-edit-place
 import { Emoji } from '../../../models/emoji';
 import { Place } from '../../../models/place';
 import { faEdit } from '@fortawesome/free-regular-svg-icons';
-import { faRemove } from '@fortawesome/free-solid-svg-icons';
+import { faRemove, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { LocationService } from '../../../services/location.service';
 import { Observable } from 'rxjs';
@@ -20,6 +20,7 @@ export class PlaceTableComponent {
 
   Emoji = Emoji;
   faEdit = faEdit;
+  faMagnifyingGlass = faMagnifyingGlass
   faRemove = faRemove;
 
   cachedDistances = {};

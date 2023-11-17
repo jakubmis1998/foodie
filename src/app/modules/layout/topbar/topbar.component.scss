@@ -1,9 +1,12 @@
+@import "src/app/styles/variables";
+
 .topbar-body {
   background-color: white;
   width: 100vw;
 
   .user-btn {
-    background-color: rgb(100, 100, 100, 0.15);
+    background-color: $background-content;
+    border: 2px solid lightgray;
 
     .user-primary-info {
       font-size: .9rem;

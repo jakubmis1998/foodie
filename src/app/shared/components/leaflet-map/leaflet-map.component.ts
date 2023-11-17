@@ -3,12 +3,12 @@ import { circle, Icon, icon, IconOptions, latLng, marker, Point, tileLayer, Rout
 import { LocationService } from '../../../services/location.service';
 import { ObjectType } from '../../../models/utils';
 import 'leaflet-routing-machine';
+import { Observable, Subject, tap } from 'rxjs';
 
 @Component({
   selector: 'app-leaflet-map',
   templateUrl: './leaflet-map.component.html',
-  styleUrls: ['./leaflet-map.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./leaflet-map.component.scss']
 })
 export class LeafletMapComponent implements OnInit {
 
@@ -21,7 +21,7 @@ export class LeafletMapComponent implements OnInit {
   zoomValue = 17;
   distance: number;
 
-  constructor(private locationService: LocationService,private cdr: ChangeDetectorRef) {}
+  constructor(private locationService: LocationService) {}
 
   ngOnInit(): void {
     this.locationService.updateCurrentLocation().subscribe(currentPos => {
@@ -60,7 +60,6 @@ export class LeafletMapComponent implements OnInit {
         maxZoom: 20,
         center: latLng(this.coords.lat, this.coords.lon)
       };
-      this.cdr.markForCheck();
     });
   }
 
@@ -88,10 +87,10 @@ export class LeafletMapComponent implements OnInit {
       lineOptions: {styles: [{color: '#00750e'}], extendToWaypoints: false, missingRouteTolerance: 0}
     }).addTo(map);
 
-    this.distance = this.map.distance(
-      latLng(this.currentPos.latitude, this.currentPos.longitude), latLng(this.coords.lat, this.coords.lon)
-    ) / 1000;
-
-    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.distance = this.map.distance(
+        latLng(this.currentPos.latitude, this.currentPos.longitude), latLng(this.coords.lat, this.coords.lon)
+      ) / 1000;
+    });
   }
 }

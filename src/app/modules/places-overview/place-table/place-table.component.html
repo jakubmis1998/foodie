@@ -1,13 +1,18 @@
-<div class="overview-header d-flex">
-  <span class="f-3x">Places</span>
+<div class="d-flex flex-column justify-content-center align-items-center">
+  <span class="text-secondary fw-bold f-3x">Places overview</span>
 
-  <div class="d-flex">
-    <select name="searchType" id="searchType">
-      <option value="volvo">Name</option>
-      <option value="saab">Place</option>
-      <option value="mercedes">Tag</option>
+  <div class="d-flex search-field mt-3 mb-3">
+    <select class="form-select" name="searchType" id="searchType">
+      <option value="name">Name</option>
+      <option value="tags">Tag</option>
+      <option value="city">City</option>
     </select>
-    <input placeholder="Search by (dropdown: name, place, tag)">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search..." aria-describedby="magnifier">
+      <span class="input-group-text bg-white" id="magnifier">
+        <fa-icon class="text-secondary" [icon]="faMagnifyingGlass"></fa-icon>
+      </span>
+    </div>
   </div>
 </div>
 

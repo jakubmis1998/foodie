@@ -7,7 +7,9 @@ import 'firebase/compat/firestore'; // Required for side-effects
 import { CollectionReference, DocumentData, QueryDocumentSnapshot } from '../models/firebaseModel';
 import { ListResponse, ObjectType } from '../models/utils';
 import { SortingSettings } from '../models/sort';
+import { query, where } from "firebase/firestore";
 import FieldPath = firebase.firestore.FieldPath;
+// import { where, or } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +34,17 @@ export class FirestoreDataService {
       call.endBefore(columnValue) :
       call.startAfter(columnValue || sortingSettings.alternativeValue);
 
-    const limited = reversed ? paginated.limitToLast(pageSize) : paginated.limit(pageSize);
+    let limited = reversed ? paginated.limitToLast(pageSize) : paginated.limit(pageSize);
+
+    // Filtrowanie wyłącza sortowanie
+    // limited = this.getCollection().where('tags', 'array-contains', 'mniam'); // Filtr tagów
+    // limited = this.getCollection().orderBy('name').startAt('KF').endAt('KF' + '\uf8ff'); // Filtr po nazwie
+    // limited = this.getCollection().orderBy('address.address.city').startAt('Wro'.toUpperCase()).endAt('Wro'.toLowerCase() + '\uf8ff'); // Filtr po mieście
+    limited = this.getCollection().where('tags', 'array-contains', 'pierogi');
+    // Pomysl - (hidden) tagi małymi literami, wrzucać od razu tagi związane z nazwą (np. pierogarnia, stary, młyn) - szukać nazwę po tagach
+    // Co z McDonald jesli jest to jedno slowo
+    // Filter by keyword - na podstawie hidden tagów (tam wrzucić człony nazwy, adresu)
+    // Filter startsWith - użyć tego startAt i endAt
 
     return from(limited.get()).pipe(
       map(data => {
