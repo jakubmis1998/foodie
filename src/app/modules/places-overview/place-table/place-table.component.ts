@@ -10,6 +10,7 @@ import { faRemove, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { LocationService } from '../../../services/location.service';
 import { Observable } from 'rxjs';
+import { ListParams } from '../../../models/list-params';
 
 @Component({
   selector: 'app-place-table',
@@ -22,6 +23,7 @@ export class PlaceTableComponent {
   faEdit = faEdit;
   faMagnifyingGlass = faMagnifyingGlass
   faRemove = faRemove;
+  listParams = new ListParams();
 
   cachedDistances = {};
 
@@ -65,7 +67,11 @@ export class PlaceTableComponent {
   }
 
   refresh(): void {
-    this.locationService.updateCurrentLocation().subscribe();
-    this.cachedDistances = {};
+    this.locationService.updateCurrentLocation().subscribe(() => this.cachedDistances = {});
+  }
+
+  search(phrase?: string): void {
+    this.listParams.filters.value = phrase;
+    this.firestoreDataService.dataChanged.next(undefined);
   }
 }

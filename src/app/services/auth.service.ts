@@ -28,10 +28,7 @@ export class AuthService {
       this.userCredential = userCredential;
       this.router.navigate(['/dashboard']);
       localStorage.setItem('accessToken', (userCredential.credential as firebase.auth.OAuthCredential).accessToken!);
-    })
-      .catch((error) => {
-        console.log(error);
-      });
+    }).catch((error) => console.log(error));
   }
 
   logout(): void {

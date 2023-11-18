@@ -4,6 +4,10 @@
       <ng-container *ngFor="let item of items; let i = index">
         <ng-container *ngTemplateOutlet="itemTemplate; context: getItemContext(item)"></ng-container>
       </ng-container>
+      <!-- Empty table -->
+      <ng-container *ngIf="!items.length">
+        <span class="text-secondary f-3x mb-2">Not found {{ Emoji.sad | emoji }}</span>
+      </ng-container>
     </ng-container>
   </div>
 

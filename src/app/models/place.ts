@@ -1,14 +1,11 @@
 import { ObjectType } from './utils';
+import { BaseModel } from './base-model';
 
-export interface Place {
-  id: string;
+export interface Place extends BaseModel {
   name: string;
-  tags: string[];
   averageRating: number;
   rating: PlaceRating;
   address: ObjectType;
-  createdAt: Date;
-  changedAt: Date;
 }
 
 export interface PlaceRating {

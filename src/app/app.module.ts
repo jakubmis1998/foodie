@@ -18,6 +18,9 @@ import { FormsModule } from '@angular/forms';
 import { LayoutModule } from './modules/layout/layout.module';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LocationService } from './services/location.service';
+import { AuthService } from './services/auth.service';
+import { OpenStreetService } from './services/openstreet.service';
 
 @NgModule({
   declarations: [
@@ -60,7 +63,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         }
       } as SocialAuthServiceConfig
     },
-    { provide: FIREBASE_OPTIONS, useValue: environment.firebase }
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
+    LocationService,
+    AuthService,
+    OpenStreetService
   ],
   bootstrap: [AppComponent]
 })

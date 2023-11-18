@@ -4,16 +4,17 @@ import { catchError, from, map, Observable, Subject, tap } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore'; // Required for side-effects
-import { CollectionReference, DocumentData, QueryDocumentSnapshot } from '../models/firebaseModel';
+import {
+  CollectionReference,
+  DocumentData,
+  Query,
+  QueryDocumentSnapshot,
+  QuerySnapshot
+} from '../models/firebaseModel';
 import { ListResponse, ObjectType } from '../models/utils';
-import { SortingSettings } from '../models/sort';
-import { query, where } from "firebase/firestore";
-import FieldPath = firebase.firestore.FieldPath;
-// import { where, or } from '@angular/fire/firestore';
+import { ListParams } from '../models/list-params';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class FirestoreDataService {
 
   private collection: CollectionReference
@@ -25,38 +26,32 @@ export class FirestoreDataService {
   ) {}
 
   getAll(
-    latestDoc?: QueryDocumentSnapshot<DocumentData> | undefined, reversed = false, sortingSettings = new SortingSettings(), pageSize = 9
+    latestDoc?: QueryDocumentSnapshot<DocumentData> | undefined, reversed = false, listParams = new ListParams()
   ): Observable<ListResponse> {
-    const call = this.getCollection().orderBy(new FieldPath(...sortingSettings.column), sortingSettings.direction);
+    const collection = this.getCollection();
 
-    const columnValue = latestDoc?.data()[sortingSettings.column[0]];
-    const paginated = reversed ?
-      call.endBefore(columnValue) :
-      call.startAfter(columnValue || sortingSettings.alternativeValue);
+    let paginated: Query<DocumentData>;
+    // Filters available without ordering
+    if (listParams.filters.value) {
+      paginated = collection.where('tags', 'array-contains', listParams.filters.value);
+    } else {
+      const orderedBy = collection.orderBy(listParams.sorting.column, listParams.sorting.direction);
+      const columnValue = latestDoc?.data()[listParams.sorting.column];
+      paginated = reversed ?
+        orderedBy.endBefore(columnValue) :
+        orderedBy.startAfter(columnValue || listParams.sorting.comparativeValue);
+    }
 
-    let limited = reversed ? paginated.limitToLast(pageSize) : paginated.limit(pageSize);
-
-    // Filtrowanie wyłącza sortowanie
-    // limited = this.getCollection().where('tags', 'array-contains', 'mniam'); // Filtr tagów
-    // limited = this.getCollection().orderBy('name').startAt('KF').endAt('KF' + '\uf8ff'); // Filtr po nazwie
-    // limited = this.getCollection().orderBy('address.address.city').startAt('Wro'.toUpperCase()).endAt('Wro'.toLowerCase() + '\uf8ff'); // Filtr po mieście
-    limited = this.getCollection().where('tags', 'array-contains', 'pierogi');
-    // Pomysl - (hidden) tagi małymi literami, wrzucać od razu tagi związane z nazwą (np. pierogarnia, stary, młyn) - szukać nazwę po tagach
-    // Co z McDonald jesli jest to jedno slowo
-    // Filter by keyword - na podstawie hidden tagów (tam wrzucić człony nazwy, adresu)
-    // Filter startsWith - użyć tego startAt i endAt
+    const limited = reversed ? paginated.limitToLast(listParams.pagination.pageSize) : paginated.limit(listParams.pagination.pageSize);
 
     return from(limited.get()).pipe(
-      map(data => {
+      map((data: QuerySnapshot<DocumentData>) => {
         return {
           docs: data.docs,
           items: data.docs.map(doc => {
-            const docData = doc.data();
-            docData.createdAt = docData.createdAt.toDate();
-            docData.changedAt = docData.changedAt.toDate();
             return {
               id: doc.id,
-              ...docData
+              ...doc.data() as DocumentData
             };
           })
         };
@@ -75,11 +70,11 @@ export class FirestoreDataService {
 
   get(id: string): Observable<ObjectType> {
     return from(this.getCollection().doc(id).get()).pipe(
-      map(doc => doc.data() as DocumentData),
       map(doc => {
-        doc.createdAt = doc.createdAt.toDate();
-        doc.changedAt = doc.changedAt.toDate();
-        return doc;
+        return {
+          id: doc.id,
+          ...doc.data() as DocumentData
+        }
       }),
       catchError((err) => {
         this.toastrService.error(err, 'Error!');

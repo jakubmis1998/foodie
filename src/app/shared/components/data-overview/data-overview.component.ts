@@ -5,6 +5,8 @@ import { DocumentData, QueryDocumentSnapshot } from '../../../models/firebaseMod
 import { ObjectType } from '../../../models/utils';
 import { Subscription } from 'rxjs';
 import { faRefresh } from '@fortawesome/free-solid-svg-icons';
+import { ListParams } from '../../../models/list-params';
+import { Emoji } from '../../../models/emoji';
 
 @Component({
   selector: 'app-data-overview',
@@ -14,6 +16,7 @@ import { faRefresh } from '@fortawesome/free-solid-svg-icons';
 export class DataOverviewComponent implements OnInit, OnDestroy {
 
   @Input() itemTemplate: TemplateRef<any>;
+  @Input() listParams: ListParams;
   @Input() refreshCallback: () => void;
 
   faRefresh = faRefresh;
@@ -21,6 +24,7 @@ export class DataOverviewComponent implements OnInit, OnDestroy {
   docs: QueryDocumentSnapshot<DocumentData>[];
   loading = true;
   dataChangedSubscription: Subscription;
+  Emoji = Emoji;
 
   constructor(private firestoreDataService: FirestoreDataService) {}
 
@@ -34,11 +38,19 @@ export class DataOverviewComponent implements OnInit, OnDestroy {
     const isNext = direction === 'next';
     this.firestoreDataService.getAll(
       direction ? this.docs?.[isNext ? this.docs.length - 1 : 0] : undefined,
-      direction ? !isNext : isNext
+      direction ? !isNext : isNext,
+      this.listParams
     ).subscribe(data => {
       if (data.docs.length) {
         this.docs = data.docs;
         this.items = data.items as Place[];
+      } else {
+        // Don't reset when using pagination arrows (Store current data)
+        // Reset otherwise (filters, etc.)
+        if (!direction) {
+          this.docs = [];
+          this.items = [];
+        }
       }
       this.loading = false;
     }, () => this.loading = false);

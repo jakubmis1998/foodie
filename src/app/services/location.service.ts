@@ -34,9 +34,9 @@ export class LocationService {
               alert('No position detected.');
             }
           },
-          (error) => {
-            alert(`Geolocation error: ${error}`);
-            console.log(error);
+          (error: GeolocationPositionError) => {
+            alert(`Geolocation error: ${error.message}`);
+            console.log(error.message);
           },
           { enableHighAccuracy: true }
         );

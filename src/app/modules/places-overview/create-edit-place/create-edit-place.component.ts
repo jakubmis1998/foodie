@@ -10,6 +10,8 @@ import { LocationService } from '../../../services/location.service';
 import autocomplete from 'autocompleter';
 import { AutocompleteResult } from 'autocompleter/autocomplete';
 import { OpenStreetService } from '../../../services/openstreet.service';
+import { ObjectType } from '../../../models/utils';
+import { getDefaultTags } from '../../../models/base-model';
 
 @Component({
   selector: 'app-create-edit-place',
@@ -21,8 +23,8 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
   Emoji = Emoji;
   form: FormGroup;
   loading = false;
-  selectedPlace: any;
   autocomplete: AutocompleteResult;
+  place: Place;
 
   @Input() placeId: string;
 
@@ -36,7 +38,8 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
 
   ngOnInit(): void {
     (this.placeId ? this.firestoreDataService.get(this.placeId) : of({} as Place)).subscribe(place => {
-      this.initForm(place as Place);
+      this.place = place as Place;
+      this.initForm();
     });
   }
 
@@ -46,70 +49,33 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-  initAutocomplete(): void {
-    const input = document.getElementById('address')! as HTMLInputElement;
-    this.autocomplete = autocomplete({
-      input,
-      minLength: 3,
-      emptyMsg: 'No places found',
-      debounceWaitMs: 1000,
-      fetch: (text: string, update: (items: any[]) => void) => {
-        this.osmService.search(text).subscribe(results => {
-          update(results);
-        });
-      },
-      render: (item: any, currentValue: any) => {
-        const div = document.createElement('div');
-        const displayItems = item.display_name.split(', ') as string[];
-        div.textContent = displayItems.slice(0, displayItems.length - 3).join(', ');
-        return div;
-      },
-      onSelect: (item: any) => {
-        this.selectedPlace = item;
-        this.form.get('name')?.setValue(item.name);
-        const displayItems = item.display_name.split(', ') as string[];
-        input.value = displayItems.slice(0, displayItems.length - 3).join(', ');
-      },
-      keyup: e => e.fetch(),
-      click: e => e.fetch()
-    } as any);
-  }
-
-  initForm(place?: Place): void {
+  initForm(): void {
     const defaultRateValue = 2.5;
     this.form = this.fb.group({
-      name: this.fb.control<string | undefined>(place?.name, [Validators.required]),
-      address: this.fb.control(place?.address, this.placeId ? [] : [Validators.required]),
-      averageRating: this.fb.control<number | undefined>(undefined),
+      name: this.fb.control<string | undefined>(this.place?.name, [Validators.required]),
+      address: this.fb.control<ObjectType | undefined>(this.place?.address, this.placeId ? [] : [Validators.required]),
       rating: this.fb.group({
-        localization: this.fb.control<number>(place?.rating?.localization || defaultRateValue),
-        staff: this.fb.control<number>(place?.rating?.staff || defaultRateValue),
-        comfort: this.fb.control<number>(place?.rating?.comfort || defaultRateValue),
-        prices: this.fb.control<number>(place?.rating?.prices || defaultRateValue),
-        cleanliness: this.fb.control<number>(place?.rating?.cleanliness || defaultRateValue)
+        localization: this.fb.control<number>(this.place?.rating?.localization || defaultRateValue),
+        staff: this.fb.control<number>(this.place?.rating?.staff || defaultRateValue),
+        comfort: this.fb.control<number>(this.place?.rating?.comfort || defaultRateValue),
+        prices: this.fb.control<number>(this.place?.rating?.prices || defaultRateValue),
+        cleanliness: this.fb.control<number>(this.place?.rating?.cleanliness || defaultRateValue)
       }),
-      tags: this.fb.control<string[] | undefined>(place?.tags),
-      createdAt: this.fb.control<Date | undefined>(place?.createdAt),
-      changedAt: this.fb.control<Date | undefined>(place?.changedAt)
+      tags: this.fb.control<string[]>(this.place?.tags || [])
     });
   }
 
   save(): void {
     this.loading = true;
     let saveCall: Observable<void>;
-    if (!this.placeId) {
-      this.form.get('address')?.setValue(this.selectedPlace);
-    }
     if (this.form.valid) {
-      const now = new Date();
-      this.form.get('changedAt')?.setValue(now);
-      this.form.get('averageRating')?.setValue(getAverageRating(this.form.value.rating));
+
+      const formData = this.getFormData();
 
       if (!this.placeId) {
-        this.form.get('createdAt')?.setValue(now);
-        saveCall = this.firestoreDataService.create(this.form.value);
+        saveCall = this.firestoreDataService.create(formData);
       } else {
-        saveCall = this.firestoreDataService.update(this.placeId, this.form.value);
+        saveCall = this.firestoreDataService.update(this.placeId, formData);
       }
 
       saveCall.subscribe(() => {
@@ -119,6 +85,18 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
     } else {
       this.loading = false;
     }
+  }
+
+  getFormData(): ObjectType {
+    const data = this.form.value;
+
+    const now = Date.now();
+    data.createdAt = this.place?.createdAt || now;
+    data.changedAt = now;
+    data.averageRating = getAverageRating(this.form.value.rating);
+    data.tags = getDefaultTags(data, !!this.placeId);
+
+    return data;
   }
 
   getFieldValue(fieldName: string): any {
@@ -131,6 +109,40 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
 
   isValidField(fieldName: string, validationType = 'required'): boolean {
     return (this.form.get(fieldName)?.touched) && this.form.get(fieldName)?.errors?.[validationType];
+  }
+
+  initAutocomplete(): void {
+    const input = document.getElementById('address')! as HTMLInputElement;
+    this.autocomplete = autocomplete({
+      input,
+      minLength: 3,
+      emptyMsg: 'No places found',
+      debounceWaitMs: 1000,
+      fetch: (text: string, update: (items: ObjectType[]) => void) => {
+        this.osmService.search(text).subscribe(results => update(results));
+      },
+      render: (item: ObjectType, currentValue: any) => {
+        // Render option label
+        const div = document.createElement('div');
+        const displayItems = item.display_name.split(', ') as string[];
+        div.textContent = displayItems.slice(0, displayItems.length - 3).join(', ') || item.display_name || item.name;
+        return div;
+      },
+      onSelect: (item: ObjectType) => {
+        // Set form name
+        this.form.get('name')?.setValue(item.name);
+        // Set form address
+        this.form.get('address')?.setValue(item);
+        // Set form tags
+        this.form.get('tags')?.setValue(getDefaultTags(this.form.value, false));
+        // Set input label
+        const displayItems = item.display_name.split(', ') as string[];
+        input.value = displayItems.slice(0, displayItems.length - 3).join(', ') || item.display_name || item.name;
+
+      },
+      keyup: e => e.fetch(),
+      click: e => e.fetch()
+    } as any);
   }
 
   ngOnDestroy(): void {

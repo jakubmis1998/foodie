@@ -1,5 +1,10 @@
 @import 'src/app/styles/variables';
 
+.overview-title {
+  font-weight: 300;
+  font-size: 3rem;
+}
+
 .overview-item {
   box-shadow: rgba(99, 99, 99, 0.2) 0 2px 12px 0;
   position: relative;

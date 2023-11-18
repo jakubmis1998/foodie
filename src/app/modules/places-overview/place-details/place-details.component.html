@@ -18,7 +18,7 @@
           <ng-container *ngIf="!place.tags || place.tags?.length === 0">No tags added</ng-container>
         </div>
         <div *ngIf="place.tags && place.tags.length > 0" class="tags d-flex justify-content-center flex-wrap">
-          <div class="tag me-3 p-2 my-1" *ngFor="let tag of place.tags">
+          <div class="tag me-3 px-2 py-1 my-1" *ngFor="let tag of place.tags">
             {{ tag }}
           </div>
         </div>
