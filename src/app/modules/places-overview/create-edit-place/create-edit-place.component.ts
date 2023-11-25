@@ -2,7 +2,6 @@ import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/cor
 import { Emoji } from '../../../models/emoji';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Place } from '../../../models/place';
-import { FirestoreDataService } from '../../../services/firestore-data.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of } from 'rxjs';
 import { getAverageRating } from '../../../shared/utils/rating';
@@ -12,6 +11,7 @@ import { AutocompleteResult } from 'autocompleter/autocomplete';
 import { OpenStreetService } from '../../../services/openstreet.service';
 import { ObjectType } from '../../../models/utils';
 import { getDefaultTags } from '../../../models/base-model';
+import { FirestorePlaceDataService } from '../../../services/firestore-data/firestore-place-data.service';
 
 @Component({
   selector: 'app-create-edit-place',
@@ -30,14 +30,14 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
 
   constructor(
     private fb: FormBuilder,
-    private firestoreDataService: FirestoreDataService,
+    private firestorePlaceDataService: FirestorePlaceDataService,
     public activeModal: NgbActiveModal,
     private locationService: LocationService,
     private osmService: OpenStreetService
   ) {}
 
   ngOnInit(): void {
-    (this.placeId ? this.firestoreDataService.get(this.placeId) : of({} as Place)).subscribe(place => {
+    (this.placeId ? this.firestorePlaceDataService.get(this.placeId) : of({} as Place)).subscribe(place => {
       this.place = place as Place;
       this.initForm();
     });
@@ -73,9 +73,9 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
       const formData = this.getFormData();
 
       if (!this.placeId) {
-        saveCall = this.firestoreDataService.create(formData);
+        saveCall = this.firestorePlaceDataService.create(formData);
       } else {
-        saveCall = this.firestoreDataService.update(this.placeId, formData);
+        saveCall = this.firestorePlaceDataService.update(this.placeId, formData);
       }
 
       saveCall.subscribe(() => {
@@ -113,6 +113,10 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
 
   initAutocomplete(): void {
     const input = document.getElementById('address')! as HTMLInputElement;
+    const displayLabel = (item: ObjectType) => {
+      const displayItems = item.display_name.split(', ') as string[];
+      return displayItems.slice(0, displayItems.length - 3).join(', ') || item.display_name || item.name;
+    };
     this.autocomplete = autocomplete({
       input,
       minLength: 3,
@@ -124,21 +128,14 @@ export class CreateEditPlaceComponent implements OnInit, AfterViewInit, OnDestro
       render: (item: ObjectType, currentValue: any) => {
         // Render option label
         const div = document.createElement('div');
-        const displayItems = item.display_name.split(', ') as string[];
-        div.textContent = displayItems.slice(0, displayItems.length - 3).join(', ') || item.display_name || item.name;
+        div.textContent = displayLabel(item);
         return div;
       },
       onSelect: (item: ObjectType) => {
-        // Set form name
-        this.form.get('name')?.setValue(item.name);
-        // Set form address
-        this.form.get('address')?.setValue(item);
-        // Set form tags
-        this.form.get('tags')?.setValue(getDefaultTags(this.form.value, false));
-        // Set input label
-        const displayItems = item.display_name.split(', ') as string[];
-        input.value = displayItems.slice(0, displayItems.length - 3).join(', ') || item.display_name || item.name;
-
+        this.form.get('name')?.setValue(item.name); // Set form name
+        this.form.get('address')?.setValue(item); // Set form address
+        this.form.get('tags')?.setValue(getDefaultTags(this.form.value, false)); // Set form tags
+        input.value = displayLabel(item); // Set input label
       },
       keyup: e => e.fetch(),
       click: e => e.fetch()

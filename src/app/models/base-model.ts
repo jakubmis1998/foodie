@@ -7,7 +7,7 @@ export interface BaseModel {
   tags: string[];
 }
 
-export function getDefaultTags(item: ObjectType, storeExisitng: boolean): string[] {
+export function getDefaultTags(item: ObjectType, storeExisting: boolean): string[] {
   let defaultTags = [
     item.name,
     item.address?.name,
@@ -33,7 +33,7 @@ export function getDefaultTags(item: ObjectType, storeExisitng: boolean): string
   }
 
   // Remove duplicates
-  if (storeExisitng) {
+  if (storeExisting) {
     defaultTags = defaultTags.concat(item.tags);
   }
   return [...new Set(defaultTags.filter(tag => !!tag))];

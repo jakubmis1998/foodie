@@ -9,7 +9,7 @@ import { FirestoreDataAbstractService } from './firestore-data-abstract.service'
 import { OverviewType } from '../../models/utils';
 
 @Injectable()
-export class FirestorePlaceDataService extends FirestoreDataAbstractService {
+export class FirestoreFoodDataService extends FirestoreDataAbstractService {
 
   private collection: CollectionReference
 
@@ -19,7 +19,7 @@ export class FirestorePlaceDataService extends FirestoreDataAbstractService {
 
   protected getCollection(): CollectionReference {
     if(!this.collection) {
-      this.collection = firebase.firestore().collection(OverviewType.PLACES);
+      this.collection = firebase.firestore().collection(OverviewType.FOOD);
     }
     return this.collection;
   }

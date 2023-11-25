@@ -11,20 +11,3 @@
   width: 100%;
   text-align: center;
 }
-
-// ngx-chips => tag-input component
-div.ng2-tag-input--focused {
-  border-color: $primary !important;
-}
-
-.hide-routing-agenda {
-  // Routing agenda hiding
-  div.leaflet-routing-container.leaflet-bar.leaflet-control {
-    display: none !important;
-  }
-}
-
-.leaflet-routing-alternatives-container {
-  max-height: 360px !important;
-  overflow-y: auto !important;
-}

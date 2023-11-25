@@ -12,7 +12,7 @@
   </div>
 </div>
 
-<app-data-overview [itemTemplate]="dataItem" [refreshCallback]="refresh.bind(this)" [listParams]="listParams"></app-data-overview>
+<app-data-overview [overviewType]="OverviewType.PLACES" [itemTemplate]="dataItem" [refreshCallback]="refresh.bind(this)" [listParams]="listParams"></app-data-overview>
 
 <button class="btn btn-primary btn-create" (click)="createPlace()">+</button>
 
@@ -21,13 +21,13 @@
     <div class="item-header d-flex justify-content-between pt-3">
       <fa-icon class="cursor-pointer text-primary f-2x" [icon]="faEdit" (click)="updatePlace(item.id)"></fa-icon>
       <div class="rating px-2">
-        {{ item.averageRating | number: '0.1' }}
+        {{ item.averageRating | number: '0.1-1' }}
         <span class="ms-1">{{ Emoji.star | emoji }}</span>
       </div>
       <fa-icon class="cursor-pointer text-secondary f-2x" [icon]="faRemove" (click)="deletePlace(item.id)"></fa-icon>
     </div>
 
-    <div class="item-content d-flex flex-column text-center text-truncate fw-bold my-5">
+    <div class="item-content d-flex flex-column text-center text-truncate fw-bold mt-5">
       <span class="text-secondary f-2x mb-1">{{ item.name }}</span>
       <span *ngIf="item.address.address.city" class="text-secondary">
         {{ item.address.address.city }} {{ item.address.address.road ? ', ' + item.address.address.road: '' }} {{ item.address.address.house_number }}

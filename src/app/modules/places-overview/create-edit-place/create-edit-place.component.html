@@ -14,7 +14,7 @@
     <ng-container *ngIf="!placeId">
       <div class="mb-3 row align-items-center">
         <div class="col-sm-12">
-          <input #address type="text" formControlName="address" class="form-control" id="address" placeholder="Search place..." autocomplete="off">
+          <input type="text" formControlName="address" class="form-control" id="address" placeholder="Search place..." autocomplete="off">
           <div *ngIf="isValidField('address')" class="validation-message">
             Please choose a place.
           </div>

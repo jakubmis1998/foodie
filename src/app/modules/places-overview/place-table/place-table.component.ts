@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FirestoreDataService } from '../../../services/firestore-data.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateEditPlaceComponent } from '../create-edit-place/create-edit-place.component';
@@ -11,6 +10,8 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
 import { LocationService } from '../../../services/location.service';
 import { Observable } from 'rxjs';
 import { ListParams } from '../../../models/list-params';
+import { FirestorePlaceDataService } from '../../../services/firestore-data/firestore-place-data.service';
+import { OverviewType } from '../../../models/utils';
 
 @Component({
   selector: 'app-place-table',
@@ -20,6 +21,7 @@ import { ListParams } from '../../../models/list-params';
 export class PlaceTableComponent {
 
   Emoji = Emoji;
+  OverviewType = OverviewType;
   faEdit = faEdit;
   faMagnifyingGlass = faMagnifyingGlass
   faRemove = faRemove;
@@ -28,7 +30,7 @@ export class PlaceTableComponent {
   cachedDistances = {};
 
   constructor(
-    public firestoreDataService: FirestoreDataService,
+    public firestorePlaceDataService: FirestorePlaceDataService,
     private modalService: NgbModal,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -46,11 +48,11 @@ export class PlaceTableComponent {
   }
 
   deletePlace(id: string): void {
-    const modalRef = this.modalService.open(ConfirmModalComponent, { centered: true });
+    const modalRef = this.modalService.open(ConfirmModalComponent, { centered: true, size: 'md' });
     (modalRef.componentInstance as ConfirmModalComponent).itemName = 'place';
     modalRef.result.then(result => {
       if (result) {
-        this.firestoreDataService.delete(id).subscribe();
+        this.firestorePlaceDataService.delete(id).subscribe();
       }
     });
   }
@@ -72,6 +74,6 @@ export class PlaceTableComponent {
 
   search(phrase?: string): void {
     this.listParams.filters.value = phrase;
-    this.firestoreDataService.dataChanged.next(undefined);
+    this.firestorePlaceDataService.dataChanged.next(undefined);
   }
 }

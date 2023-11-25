@@ -9,7 +9,7 @@ import { TagInputModule } from 'ngx-chips';
 import { SharedModule } from '../../shared/shared.module';
 import { PlaceDetailsComponent } from './place-details/place-details.component';
 import { PlaceTableComponent } from './place-table/place-table.component';
-import { FirestoreDataService } from '../../services/firestore-data.service';
+import { FirestorePlaceDataService } from '../../services/firestore-data/firestore-place-data.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,7 @@ import { FirestoreDataService } from '../../services/firestore-data.service';
     SharedModule
   ],
   providers: [
-    FirestoreDataService
+    FirestorePlaceDataService
   ]
 })
 export class PlacesOverviewModule { }

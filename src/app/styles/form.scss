@@ -4,10 +4,8 @@
   }
 }
 
-input, textarea, select {
-  &:has(+.validation-message) {
-    border-color: red;
-  }
+input.ng-invalid.ng-touched {
+  border: 1px solid red;
 }
 
 .validation-message {
@@ -20,4 +18,9 @@ label.required:after {
   content:" *";
   color: $primary;
   text-wrap: nowrap;
+}
+
+// ngx-chips => tag-input component
+div.ng2-tag-input--focused {
+  border-color: $primary !important;
 }

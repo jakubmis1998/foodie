@@ -1,3 +1,6 @@
+import { DocumentData, QueryDocumentSnapshot } from './firebaseModel';
+import { ObjectType } from './utils';
+
 export enum SortDirection {
   ASC = 'asc',
   DESC = 'desc'
@@ -17,9 +20,9 @@ export class SortingParams {
 
 export class FilterParams {
   column: string;
-  value: any;
+  value: string | number | undefined;
 
-  constructor(column = 'tags', value = undefined) {
+  constructor(column = 'tags', value: string | number | undefined = undefined) {
     this.column = column;
     this.value = value;
   }
@@ -47,4 +50,9 @@ export class ListParams {
     this.filters = filters;
     this.pagination = pagination;
   }
+}
+
+export type ListResponse = {
+  docs: QueryDocumentSnapshot<DocumentData>[];
+  items: ObjectType[];
 }

@@ -1,12 +1,13 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { FirestoreDataService } from '../../../services/firestore-data.service';
+import { Component, Injector, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { Place } from '../../../models/place';
 import { DocumentData, QueryDocumentSnapshot } from '../../../models/firebaseModel';
-import { ObjectType } from '../../../models/utils';
+import { ObjectType, OverviewType } from '../../../models/utils';
 import { Subscription } from 'rxjs';
 import { faRefresh } from '@fortawesome/free-solid-svg-icons';
 import { ListParams } from '../../../models/list-params';
 import { Emoji } from '../../../models/emoji';
+import { FirestorePlaceDataService } from '../../../services/firestore-data/firestore-place-data.service';
+import { FirestoreFoodDataService } from '../../../services/firestore-data/firestore-food-data.service';
 
 @Component({
   selector: 'app-data-overview',
@@ -15,6 +16,7 @@ import { Emoji } from '../../../models/emoji';
 })
 export class DataOverviewComponent implements OnInit, OnDestroy {
 
+  @Input() overviewType: OverviewType;
   @Input() itemTemplate: TemplateRef<any>;
   @Input() listParams: ListParams;
   @Input() refreshCallback: () => void;
@@ -26,9 +28,16 @@ export class DataOverviewComponent implements OnInit, OnDestroy {
   dataChangedSubscription: Subscription;
   Emoji = Emoji;
 
-  constructor(private firestoreDataService: FirestoreDataService) {}
+  private firestoreDataService: FirestoreFoodDataService | FirestorePlaceDataService;
+
+  constructor(private injector: Injector) {
+  }
 
   ngOnInit(): void {
+    this.firestoreDataService = this.overviewType === OverviewType.PLACES ?
+      <FirestorePlaceDataService>this.injector.get(FirestorePlaceDataService) :
+      <FirestoreFoodDataService>this.injector.get(FirestoreFoodDataService);
+
     this.changePage();
     this.dataChangedSubscription = this.firestoreDataService.dataChanged.subscribe(() => this.changePage());
   }
@@ -56,13 +65,13 @@ export class DataOverviewComponent implements OnInit, OnDestroy {
     }, () => this.loading = false);
   }
 
-  getItemContext(item: ObjectType): { $implicit: ObjectType } {
-    return { $implicit: item };
-  }
-
   refresh(): void {
     this.refreshCallback();
     this.changePage();
+  }
+
+  getItemContext(item: ObjectType): { $implicit: ObjectType } {
+    return { $implicit: item };
   }
 
   ngOnDestroy(): void {

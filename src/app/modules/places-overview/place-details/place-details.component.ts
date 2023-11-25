@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { FirestoreDataService } from '../../../services/firestore-data.service';
 import { Place } from '../../../models/place';
 import * as Highcharts from 'highcharts';
+import { FirestorePlaceDataService } from '../../../services/firestore-data/firestore-place-data.service';
 
 @Component({
   selector: 'app-place-details',
@@ -22,13 +22,13 @@ export class PlaceDetailsComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private location: Location,
-    private firestoreDataService: FirestoreDataService
+    private firestorePlaceDataService: FirestorePlaceDataService
   ) {
   }
 
   ngOnInit(): void {
     const placeId = this.activatedRoute.snapshot.paramMap.get('id')!;
-    this.firestoreDataService.get(placeId).subscribe(place => {
+    this.firestorePlaceDataService.get(placeId).subscribe(place => {
       this.place = place as Place;
       this.setChartOptions();
       this.loading = false;
@@ -91,7 +91,7 @@ export class PlaceDetailsComponent implements OnInit {
   }
 
   format(str: string): string {
-    return str.charAt(0).toUpperCase() + str.slice(1).replace('_', ' ')
+    return str.charAt(0).toUpperCase() + str.slice(1).replaceAll('_', ' ')
   }
 
   goBack(): void {
