@@ -11,8 +11,8 @@ import {
   QueryDocumentSnapshot,
   QuerySnapshot
 } from '../models/firebaseModel';
-import { ListResponse, ObjectType } from '../models/utils';
-import { ListParams } from '../models/list-params';
+import { ObjectType } from '../models/utils';
+import { ListParams, ListResponse } from '../models/list-params';
 
 @Injectable()
 export class FirestoreDataService {

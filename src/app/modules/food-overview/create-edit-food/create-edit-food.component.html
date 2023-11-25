@@ -1,0 +1,104 @@
+<div class="modal-header d-flex align-items-center justify-content-center">
+  <div class="modal-title d-flex align-items-center flex-row">
+    <h5 class="mb-0 me-1">
+      <ng-container *ngIf="!foodId">Add new food!</ng-container>
+      <ng-container *ngIf="foodId">Edit this food!</ng-container>
+    </h5>
+    <span class="f-2x">{{ Emoji.hamburger | emoji }}</span>
+  </div>
+</div>
+<div class="modal-body d-flex justify-content-center">
+  <app-loading *ngIf="!form"></app-loading>
+  <form *ngIf="form" [formGroup]="form">
+
+    <div class="mb-3 row align-items-center">
+      <div class="col-sm-12">
+        <input type="text" formControlName="placeId" class="form-control" id="placeId" placeholder="Search place..." autocomplete="off">
+        <div *ngIf="isValidField('placeId')" class="validation-message">
+          Please choose a place.
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3 row align-items-center">
+      <label for="name" class="col-sm-2 col-form-label required">Name</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="name" class="form-control" id="name">
+        <div *ngIf="isValidField('name')" class="validation-message">
+          Please provide a food name.
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3 row align-items-center">
+      <label for="cost" class="col-sm-2 col-form-label required">Price</label>
+      <div class="col-sm-10">
+        <div class="d-flex">
+          <input type="number" formControlName="price" class="form-control" id="cost" min="0">
+          <div class="input-group-append">
+            <span class="input-group-text">zł</span>
+          </div>
+        </div>
+        <div *ngIf="isValidField('price')" class="validation-message">
+          Please provide a food price.
+        </div>
+        <div *ngIf="isValidField('price', 'min')" class="validation-message">
+          Price must be higher than 0.
+        </div>
+      </div>
+    </div>
+
+    <div class="divider">Rating</div>
+
+    <div formGroupName="rating">
+      <div class="mb-3 row align-items-center">
+        <label for="taste" class="col-sm-4 col-form-label">Taste</label>
+        <div class="col-sm-8">
+          <input type="hidden" formControlName="taste" id="taste" class="form-control">
+          <ngx-stars color="#816ddb" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.taste')"
+                     (ratingOutput)="setStarValue('rating.taste', $event)">
+          </ngx-stars>
+        </div>
+      </div>
+      <div class="mb-3 row align-items-center">
+        <label for="look" class="col-sm-4 col-form-label">Look / Design</label>
+        <div class="col-sm-8">
+          <input type="hidden" formControlName="look" class="form-control" id="look">
+          <ngx-stars color="#816ddb" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.look')"
+                     (ratingOutput)="setStarValue('rating.look', $event)">
+          </ngx-stars>
+        </div>
+      </div>
+      <div class="mb-3 row align-items-center">
+        <label for="portionSize" class="col-sm-4 col-form-label">Portion / Size</label>
+        <div class="col-sm-8">
+          <input type="hidden" formControlName="portionSize" class="form-control" id="portionSize">
+          <ngx-stars color="#816ddb" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.portionSize')"
+                     (ratingOutput)="setStarValue('rating.portionSize', $event)">
+          </ngx-stars>
+        </div>
+      </div>
+      <div class="mb-3 row align-items-center">
+        <label for="price" class="col-sm-4 col-form-label">Price</label>
+        <div class="col-sm-8">
+          <input type="hidden" formControlName="price" class="form-control" id="price">
+          <ngx-stars color="#816ddb" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.price')"
+                     (ratingOutput)="setStarValue('rating.price', $event)">
+          </ngx-stars>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider">Tags</div>
+
+    <div class="col-sm-12">
+      <tag-input formControlName="tags" [modelAsStrings]="true"></tag-input>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" ngbAutofocus (click)="activeModal.close()">Close</button>
+  <button type="button" class="btn btn-primary" [disabled]="(form ? !form.valid : true) || loading" (click)="save()">
+    <app-loading [small]="true" color="white" *ngIf="loading"></app-loading> Save
+  </button>
+</div>

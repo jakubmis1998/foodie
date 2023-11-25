@@ -1,0 +1,40 @@
+<div class="d-flex flex-column justify-content-center align-items-center">
+  <span class="overview-title text-secondary">Food overview</span>
+
+  <div class="input-group w-75 my-3">
+    <input #searchInput type="text" class="form-control" placeholder="Search..." (keyup.enter)="search(searchInput.value)">
+    <span class="input-group-text bg-white cursor-pointer" id="reset" (click)="search(); searchInput.value = ''">
+      <fa-icon class="text-secondary" [icon]="faRemove"></fa-icon>
+    </span>
+    <span class="input-group-text bg-white cursor-pointer" id="magnifier" (click)="search(searchInput.value)">
+      <fa-icon class="text-secondary" [icon]="faMagnifyingGlass"></fa-icon>
+    </span>
+  </div>
+</div>
+
+<app-data-overview [overviewType]="OverviewType.FOOD" [itemTemplate]="dataItem" [listParams]="listParams"></app-data-overview>
+
+<button class="btn btn-primary btn-create" (click)="createFood()">+</button>
+
+<ng-template #dataItem let-item>
+  <div class="overview-item d-flex flex-column px-3" [style.background-image]="'url(' + item.thumbnailUrl + ')'">
+    <div class="item-header d-flex justify-content-between pt-3">
+      <fa-icon class="cursor-pointer text-primary f-2x" [icon]="faEdit" (click)="updateFood(item.id)"></fa-icon>
+      <div class="rating px-2">
+        {{ item.averageRating | number: '0.1-1' }}
+        <span class="ms-1">{{ Emoji.star | emoji }}</span>
+      </div>
+      <fa-icon class="cursor-pointer text-secondary f-2x" [icon]="faRemove" (click)="deleteFood(item.id)"></fa-icon>
+    </div>
+
+    <div class="item-content d-flex flex-column align-items-center justify-content-center mt-2 rounded w-100 h-100">
+      <div class="fw-bold text-secondary  f-2x text-center mb-2">{{ item.name }}</div>
+      <div class="text-secondary text-wrap text-center mb-2">{{ getItemAddress(item) | async }}</div>
+      <span class="small text-secondary">{{ item.price | number: '1.2-2' }} zł</span>
+    </div>
+
+    <div class="item-footer text-center pb-3">
+      <button class="btn btn-primary view-btn" (click)="goToDetails(item)">View details</button>
+    </div>
+  </div>
+</ng-template>
