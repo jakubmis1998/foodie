@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AutocompleteResult } from 'autocompleter';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -12,6 +12,7 @@ import { FirestoreFoodDataService } from '../../../services/firestore-data/fires
 import { FirestorePlaceDataService } from '../../../services/firestore-data/firestore-place-data.service';
 import { Place } from '../../../models/place';
 import { FilterParams, ListParams, PaginationParams, SortingParams } from '../../../models/list-params';
+import { GooglePhotosService } from '../../../services/google-photos.service';
 
 @Component({
   selector: 'app-create-edit-food',
@@ -23,6 +24,9 @@ export class CreateEditFoodComponent {
   Emoji = Emoji;
   form: FormGroup;
   loading = false;
+  photoLoading = false;
+  photoUrl: string;
+  photoId: string;
   autocomplete: AutocompleteResult;
   food: Food;
   place: Place;
@@ -33,7 +37,8 @@ export class CreateEditFoodComponent {
     private fb: FormBuilder,
     private firestoreFoodDataService: FirestoreFoodDataService,
     private firestorePlaceDataService: FirestorePlaceDataService,
-    public activeModal: NgbActiveModal
+    public activeModal: NgbActiveModal,
+    private googlePhotosService: GooglePhotosService
   ) {}
 
   ngOnInit(): void {
@@ -72,25 +77,27 @@ export class CreateEditFoodComponent {
     this.loading = true;
     let saveCall: Observable<void>;
     if (this.form.valid) {
-
-      const formData = this.getFormData();
-
-      if (!this.foodId) {
-        saveCall = this.firestoreFoodDataService.create(formData);
-      } else {
-        saveCall = this.firestoreFoodDataService.update(this.foodId, formData);
-      }
-
-      saveCall.subscribe(() => {
-        this.loading = false;
-        this.activeModal.close();
-      }, () => this.loading = false);
+      this.getFormData().pipe(
+        switchMap(formData => {
+          if (!this.foodId) {
+            saveCall = this.firestoreFoodDataService.create(formData);
+          } else {
+            saveCall = this.firestoreFoodDataService.update(this.foodId, formData);
+          }
+          return saveCall;
+        })
+      ).subscribe(
+        () => {
+          this.loading = false;
+          this.activeModal.close();
+        }, () => this.loading = false
+      );
     } else {
       this.loading = false;
     }
   }
 
-  getFormData(): ObjectType {
+  getFormData(): Observable<ObjectType> {
     const data = this.form.value;
     const nameTags = data.name.toLowerCase().split(' ');
     this.form.get('tags')?.setValue([...new Set([...this.form.value.tags, ...nameTags])]);
@@ -100,9 +107,18 @@ export class CreateEditFoodComponent {
     data.changedAt = now;
     data.averageRating = getAverageRating(this.form.value.rating);
     data.tags = this.form.value.tags;
-    data.thumbnailUrl = 'https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg';
+    data.thumbnailUrl = this.food?.thumbnailUrl;
 
-    return data;
+    if (this.photoId) {
+      return this.googlePhotosService.get(this.photoId).pipe(
+        map(photo => {
+          data.thumbnailUrl = photo.baseUrl;
+          return data;
+        })
+      );
+    }
+
+    return of(data as ObjectType);
   }
 
   getFieldValue(fieldName: string): any {
@@ -115,6 +131,19 @@ export class CreateEditFoodComponent {
 
   isValidField(fieldName: string, validationType = 'required'): boolean {
     return (this.form.get(fieldName)?.touched) && this.form.get(fieldName)?.errors?.[validationType];
+  }
+
+  addPhoto(event: any): void {
+    this.photoLoading = true;
+    const file = event.target.files[0];
+    const myReader = new FileReader();
+    myReader.onloadend = () => this.googlePhotosService.create(myReader.result as ArrayBuffer, file.name).subscribe(photo => {
+      // Save newly added photo ID and URL
+      this.photoUrl = URL.createObjectURL(file);
+      this.photoId = photo.id;
+      this.photoLoading = false;
+    });
+    myReader.readAsArrayBuffer(file);
   }
 
   initAutocomplete(): void {

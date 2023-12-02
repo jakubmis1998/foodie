@@ -23,6 +23,9 @@ export class AuthService {
   login(): void {
     const provider = new GoogleAuthProvider();
     provider.addScope('https://www.googleapis.com/auth/photoslibrary.readonly');
+    provider.addScope('https://www.googleapis.com/auth/photoslibrary.readonly.originals');
+    provider.addScope('https://www.googleapis.com/auth/photoslibrary.edit.appcreateddata');
+    provider.addScope('https://www.googleapis.com/auth/photoslibrary.appendonly');
     provider.setCustomParameters({ prompt: 'select_account' });
     this.fireAuth.signInWithPopup(provider).then((userCredential: firebase.auth.UserCredential) => {
       this.userCredential = userCredential;

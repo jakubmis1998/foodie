@@ -48,6 +48,16 @@
       </div>
     </div>
 
+    <div class="divider">Photo</div>
+    <input class="d-none" #fileInput type="file" accept="image/*" id="file-upload" (change)="addPhoto($event)">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <img *ngIf="photoUrl || food?.thumbnailUrl"
+           class="object-fit-contain mb-3" width="100%" height="100%" [src]="photoUrl || food.thumbnailUrl"
+           alt="Food thumbnail">
+      <app-loading *ngIf="photoLoading"></app-loading>
+      <button class="file-button text-secondary w-100 py-2" (click)="fileInput.click()">Upload photo</button>
+    </div>
+
     <div class="divider">Rating</div>
 
     <div formGroupName="rating">

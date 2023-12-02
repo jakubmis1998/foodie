@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { PhotoService } from './services/photo.service';
-import { GooglePhoto } from '../../models/googlePhoto';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,13 +7,10 @@ import { GooglePhoto } from '../../models/googlePhoto';
 })
 export class DashboardComponent implements OnInit {
 
-  photos: GooglePhoto[] = [];
-
-  constructor(private photoService: PhotoService) {}
+  constructor() {
+  }
 
   ngOnInit(): void {
-    // this.photoService.getPhotos().subscribe(photos => {
-    //   this.photos = photos;
-    // });
+
   }
 }

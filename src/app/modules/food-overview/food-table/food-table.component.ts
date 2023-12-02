@@ -57,7 +57,7 @@ export class FoodTableComponent {
         this.firestoreFoodDataService.delete(id).subscribe();
         delete this.cachedAddresses[id];
       }
-    });
+    }).catch(() => {});
   }
 
   goToDetails(food: Food): void {

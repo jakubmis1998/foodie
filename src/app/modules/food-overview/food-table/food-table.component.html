@@ -29,7 +29,9 @@
 
     <div class="item-content d-flex flex-column align-items-center justify-content-center mt-2 rounded w-100 h-100">
       <div class="fw-bold text-secondary  f-2x text-center mb-2">{{ item.name }}</div>
-      <div class="text-secondary text-wrap text-center mb-2">{{ getItemAddress(item) | async }}</div>
+      <div *ngIf="(getItemAddress(item) | async) as address; else loading" class="text-secondary text-wrap text-center mb-2">
+        {{ address }}
+      </div>
       <span class="small text-secondary">{{ item.price | number: '1.2-2' }} zł</span>
     </div>
 
@@ -37,4 +39,8 @@
       <button class="btn btn-primary view-btn" (click)="goToDetails(item)">View details</button>
     </div>
   </div>
+</ng-template>
+
+<ng-template #loading>
+  <app-loading></app-loading>
 </ng-template>

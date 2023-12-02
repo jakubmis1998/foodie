@@ -7,6 +7,5 @@ export interface GooglePhoto {
     creationTime: string;
     width: string;
     height: string;
-    [ key: string ]: string;
   };
 }

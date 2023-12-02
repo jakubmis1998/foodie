@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { dashboardRoutes } from './dashboard-routing';
 import { DashboardComponent } from './dashboard.component';
-import { PhotoService } from './services/photo.service';
 import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
@@ -15,6 +14,6 @@ import { SharedModule } from '../../shared/shared.module';
     RouterModule.forChild(dashboardRoutes),
     SharedModule
   ],
-  providers: [PhotoService],
+  providers: [],
 })
 export class DashboardModule { }

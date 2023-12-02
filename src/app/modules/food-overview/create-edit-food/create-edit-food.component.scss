@@ -1,0 +1,10 @@
+@import 'src/app/styles/variables';
+
+.file-button {
+  background-color: transparent;
+  border: 3px dashed $gray-300;
+}
+
+img {
+  max-height: 300px;
+}

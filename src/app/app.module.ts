@@ -54,7 +54,12 @@ import { OpenStreetService } from './services/openstreet.service';
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(environment.google.clientId, {
               oneTapEnabled: false, // default is true
-              scopes: 'https://www.googleapis.com/auth/photoslibrary.readonly'
+              scopes: [
+                'https://www.googleapis.com/auth/photoslibrary.readonly',
+                'https://www.googleapis.com/auth/photoslibrary.readonly.originals',
+                'https://www.googleapis.com/auth/photoslibrary.edit.appcreateddata',
+                'https://www.googleapis.com/auth/photoslibrary.appendonly'
+                ]
             } as GoogleInitOptions)
           }
         ],

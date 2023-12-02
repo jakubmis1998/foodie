@@ -1,12 +1,1 @@
 <p>dashboard works!</p>
-
-<div *ngIf="photos; else loading" class="d-flex">
-  <div *ngFor="let photo of photos" class="d-flex flex-column align-items-center mx-2">
-    <img [src]="photo.baseUrl" width="200" alt="User thumbnail">
-    {{ photo.filename }}
-  </div>
-</div>
-
-<ng-template #loading>
-  <app-loading>Photos loading...</app-loading>
-</ng-template>
