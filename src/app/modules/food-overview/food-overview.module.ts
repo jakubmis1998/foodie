@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
 import { FirestoreFoodDataService } from '../../services/firestore-data/firestore-food-data.service';
 import { FirestorePlaceDataService } from '../../services/firestore-data/firestore-place-data.service';
+import { GooglePhotosService } from '../../services/google-photos.service';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { FirestorePlaceDataService } from '../../services/firestore-data/firesto
   ],
   providers: [
     FirestoreFoodDataService,
-    FirestorePlaceDataService
+    FirestorePlaceDataService,
+    GooglePhotosService
   ]
 })
 export class FoodOverviewModule { }
