@@ -21,7 +21,11 @@ const routes: Routes = [
       {
         path: 'places-overview',
         loadChildren: () => import('./modules/places-overview/places-overview.module').then(m => m.PlacesOverviewModule)
-      }
+      },
+      {
+        path: 'constants-overview',
+        loadChildren: () => import('./modules/constants-overview/constants-overview.module').then(m => m.ConstantsOverviewModule)
+      },
     ],
     canActivate: mapToCanActivate([ CanActivateGuard ])
   },

@@ -6,7 +6,8 @@ export enum Emoji {
   star = 0x2B50,
   eyes = 0x1F440,
   red = 0x1F534,
-  sad = 0x1F625
+  sad = 0x1F625,
+  clipboard = 0x1F4CB
 }
 
 export function getEmoji(code: Emoji): string {

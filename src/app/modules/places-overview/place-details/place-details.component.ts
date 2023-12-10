@@ -13,9 +13,7 @@ import { FirestorePlaceDataService } from '../../../services/firestore-data/fire
 export class PlaceDetailsComponent implements OnInit {
 
   Highcharts: typeof Highcharts = Highcharts;
-
   options: Highcharts.Options;
-
   loading = true;
   place: Place;
 
@@ -91,7 +89,10 @@ export class PlaceDetailsComponent implements OnInit {
   }
 
   format(str: string): string {
-    return str.charAt(0).toUpperCase() + str.slice(1).replaceAll('_', ' ')
+    if (str) {
+      return str.charAt(0).toUpperCase() + str.slice(1).replaceAll('_', ' ');
+    }
+    return '-';
   }
 
   goBack(): void {

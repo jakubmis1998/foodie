@@ -25,11 +25,14 @@ export abstract class FirestoreDataAbstractService {
     latestDoc?: QueryDocumentSnapshot<DocumentData> | undefined, reversed = false, listParams = new ListParams()
   ): Observable<ListResponse> {
     const collection = this.getCollection();
-
     let paginated: Query<DocumentData>;
     // Filters available without ordering
     if (listParams.filters.value) {
-      paginated = collection.where('tags', 'array-contains', listParams.filters.value);
+      paginated = collection.where(
+        listParams.filters.column,
+        listParams.filters.column === 'tags' ? 'array-contains' : '==',
+        listParams.filters.value
+      );
     } else {
       const orderedBy = collection.orderBy(listParams.sorting.column, listParams.sorting.direction);
       const columnValue = latestDoc?.data()[listParams.sorting.column];
@@ -38,7 +41,12 @@ export abstract class FirestoreDataAbstractService {
         orderedBy.startAfter(columnValue || listParams.sorting.comparativeValue);
     }
 
-    const limited = reversed ? paginated.limitToLast(listParams.pagination.pageSize) : paginated.limit(listParams.pagination.pageSize);
+    let limited: Query<DocumentData>;
+    if (listParams.pagination.pageSize > 0) {
+      limited = reversed ? paginated.limitToLast(listParams.pagination.pageSize) : paginated.limit(listParams.pagination.pageSize);
+    } else {
+      limited = paginated;
+    }
 
     return from(limited.get()).pipe(
       map((data: QuerySnapshot<DocumentData>) => {

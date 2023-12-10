@@ -57,6 +57,7 @@ import { OpenStreetService } from './services/openstreet.service';
               scopes: [
                 'https://www.googleapis.com/auth/photoslibrary.readonly',
                 'https://www.googleapis.com/auth/photoslibrary.readonly.originals',
+                'https://www.googleapis.com/auth/photoslibrary.readonly.appcreateddata',
                 'https://www.googleapis.com/auth/photoslibrary.edit.appcreateddata',
                 'https://www.googleapis.com/auth/photoslibrary.appendonly'
                 ]

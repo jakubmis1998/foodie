@@ -1,10 +1,9 @@
 .modal-body {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
   .tile {
     box-shadow: rgba(0, 0, 0, 0.15) 0 3px 10px;
     text-decoration: none;
   }
-}
-
-::ng-deep .modal-content  {
-  width: auto;
 }

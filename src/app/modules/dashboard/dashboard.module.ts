@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { dashboardRoutes } from './dashboard-routing';
 import { DashboardComponent } from './dashboard.component';
 import { SharedModule } from '../../shared/shared.module';
+import { GooglePhotosService } from '../../services/google-photos.service';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,6 @@ import { SharedModule } from '../../shared/shared.module';
     RouterModule.forChild(dashboardRoutes),
     SharedModule
   ],
-  providers: [],
+  providers: [GooglePhotosService],
 })
 export class DashboardModule { }

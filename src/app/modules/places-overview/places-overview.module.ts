@@ -10,6 +10,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { PlaceDetailsComponent } from './place-details/place-details.component';
 import { PlaceTableComponent } from './place-table/place-table.component';
 import { FirestorePlaceDataService } from '../../services/firestore-data/firestore-place-data.service';
+import { FirestoreConstantsDataService } from '../../services/firestore-data/firestore-constants-data.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { FirestorePlaceDataService } from '../../services/firestore-data/firesto
     SharedModule
   ],
   providers: [
-    FirestorePlaceDataService
+    FirestorePlaceDataService,
+    FirestoreConstantsDataService
   ]
 })
 export class PlacesOverviewModule { }

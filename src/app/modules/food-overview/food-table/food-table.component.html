@@ -17,7 +17,7 @@
 <button class="btn btn-primary btn-create" (click)="createFood()">+</button>
 
 <ng-template #dataItem let-item>
-  <div class="overview-item d-flex flex-column px-3" [style.background-image]="'url(' + item.thumbnailUrl + ')'">
+  <div class="overview-item d-flex flex-column px-3">
     <div class="item-header d-flex justify-content-between pt-3">
       <fa-icon class="cursor-pointer text-primary f-2x" [icon]="faEdit" (click)="updateFood(item.id)"></fa-icon>
       <div class="rating px-2">

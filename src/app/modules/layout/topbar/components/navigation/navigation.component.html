@@ -4,8 +4,8 @@
     <span class="f-2x">{{ Emoji.eyes | emoji }}</span>
   </div>
 </div>
-<div class="modal-body d-flex">
-  <a *ngFor="let tile of routeTiles" class="tile d-flex flex-column justify-content-center align-items-center rounded cursor-pointer mx-4 py-2"
+<div class="modal-body d-fleex">
+  <a *ngFor="let tile of routeTiles" class="tile d-flex flex-column justify-content-center align-items-center rounded cursor-pointer m-4 py-2"
      [routerLink]="[tile.route]" (click)="activeModal.close()">
     <img class="tile-icon px-4 pb-2" width="150px" src="{{ 'assets/img/' + tile.filename + '.svg' }}" alt="{{ tile.filename }} icon">
     <span class="text-black">{{ tile.label }}</span>

@@ -54,7 +54,7 @@ export class PlaceTableComponent {
       if (result) {
         this.firestorePlaceDataService.delete(id).subscribe();
       }
-    });
+    }).catch(() => {});
   }
 
   goToDetails(place: Place): void {

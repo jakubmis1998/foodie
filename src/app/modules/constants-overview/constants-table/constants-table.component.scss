@@ -1,0 +1,18 @@
+$width: 250px;
+
+.constant-item {
+  min-width: $width;
+  width: $width;
+  max-width: $width;
+  box-shadow: rgba(99, 99, 99, 0.2) 0 2px 12px 0;
+  background-color: white;
+  border-radius: 1rem;
+}
+
+.btn-square {
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

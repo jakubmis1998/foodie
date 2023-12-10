@@ -14,8 +14,9 @@ export class NavigationComponent {
   constructor(public activeModal: NgbActiveModal) {}
 
   routeTiles = [
-    { label: 'Dashboard', filename: 'dashboard', route: '/dashboard' },
     { label: 'Food', filename: 'food', route: '/food-overview' },
-    { label: 'Places', filename: 'restaurant', route: '/places-overview' }
+    { label: 'Places', filename: 'restaurant', route: '/places-overview' },
+    { label: 'Dashboard', filename: 'dashboard', route: '/dashboard' },
+    { label: 'Constants', filename: 'list', route: '/constants-overview' }
   ];
 }

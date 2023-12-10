@@ -24,6 +24,7 @@ export class AuthService {
     const provider = new GoogleAuthProvider();
     provider.addScope('https://www.googleapis.com/auth/photoslibrary.readonly');
     provider.addScope('https://www.googleapis.com/auth/photoslibrary.readonly.originals');
+    provider.addScope('https://www.googleapis.com/auth/photoslibrary.readonly.appcreateddata');
     provider.addScope('https://www.googleapis.com/auth/photoslibrary.edit.appcreateddata');
     provider.addScope('https://www.googleapis.com/auth/photoslibrary.appendonly');
     provider.setCustomParameters({ prompt: 'select_account' });

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { GooglePhoto } from '../models/googlePhoto';
 import { ObjectType } from '../models/utils';
+import { Food } from '../models/food';
 
 @Injectable()
 export class GooglePhotosService {
@@ -52,7 +53,6 @@ export class GooglePhotosService {
     return this.httpClient.get(`${this.BASE_URL}/mediaItems/${id}`, {
       headers: {'Authorization': `Bearer ${this.authService.getAccessToken()}`}
     }).pipe(
-      tap(e => console.log(99, e)),
       map(result => result as GooglePhoto)
     );
   }

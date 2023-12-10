@@ -1,0 +1,26 @@
+<div class="d-flex flex-column justify-content-center align-items-center">
+  <span class="overview-title text-secondary">Constants overview</span>
+</div>
+
+<div class="d-flex justify-content-between mt-3">
+  <h2 class="text-secondary">Food constants</h2>
+  <button class="btn btn-square btn-lg btn-primary rounded-circle f-3x" (click)="createConstant(ConstantType.FOOD_TYPE)">+</button>
+</div>
+<app-data-overview [overviewType]="OverviewType.CONSTANTS" [itemTemplate]="dataItem" [listParams]="foodListParams"></app-data-overview>
+
+<div class="divider my-3"></div>
+
+<div class="d-flex justify-content-between">
+  <h2 class="text-secondary">Place constants</h2>
+  <button class="btn btn-square btn-lg btn-primary rounded-circle f-3x" (click)="createConstant(ConstantType.PLACE_TYPE)">+</button>
+</div>
+<app-data-overview [overviewType]="OverviewType.CONSTANTS" [itemTemplate]="dataItem" [listParams]="placeListParams"></app-data-overview>
+
+<ng-template #dataItem let-item>
+  <div class="constant-item d-flex flex-row align-items-center px-2">
+    <div class="cursor-pointer text-truncate text-secondary fw-bold w-100" (click)="updateConstant(item)">
+      {{ item.name }}
+    </div>
+    <fa-icon class="cursor-pointer text-secondary f-2x ms-2" [icon]="faRemove" (click)="deleteConstant(item.id)"></fa-icon>
+  </div>
+</ng-template>

@@ -12,6 +12,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { FirestoreFoodDataService } from '../../services/firestore-data/firestore-food-data.service';
 import { FirestorePlaceDataService } from '../../services/firestore-data/firestore-place-data.service';
 import { GooglePhotosService } from '../../services/google-photos.service';
+import { FirestoreConstantsDataService } from '../../services/firestore-data/firestore-constants-data.service';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { GooglePhotosService } from '../../services/google-photos.service';
   providers: [
     FirestoreFoodDataService,
     FirestorePlaceDataService,
+    FirestoreConstantsDataService,
     GooglePhotosService
   ]
 })

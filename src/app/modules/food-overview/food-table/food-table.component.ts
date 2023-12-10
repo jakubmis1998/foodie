@@ -13,6 +13,7 @@ import { OverviewType } from '../../../models/utils';
 import { FirestorePlaceDataService } from '../../../services/firestore-data/firestore-place-data.service';
 import { map, Observable } from 'rxjs';
 import { Place } from '../../../models/place';
+import { GooglePhotosService } from '../../../services/google-photos.service';
 
 @Component({
   selector: 'app-food-table',
@@ -34,7 +35,8 @@ export class FoodTableComponent {
     private firestorePlaceDataService: FirestorePlaceDataService,
     private modalService: NgbModal,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    public googlePhotosService: GooglePhotosService
   ) {}
 
   createFood(): void {

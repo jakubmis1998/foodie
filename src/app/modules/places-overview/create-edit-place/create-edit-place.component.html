@@ -32,6 +32,20 @@
       </div>
     </div>
 
+    <div class="mb-3 row align-items-center">
+      <label for="type" class="col-sm-2 col-form-label required">Type</label>
+      <div class="col-sm-10">
+        <select formControlName="type" class="form-select" id="type">
+          <option *ngFor="let placeType of placeTypes" [value]="placeType.id">
+            {{ placeType.name }}
+          </option>
+        </select>
+        <div *ngIf="isValidField('type')" class="validation-message">
+          Please choose a place type.
+        </div>
+      </div>
+    </div>
+
     <div class="divider">Rating</div>
 
     <div formGroupName="rating">

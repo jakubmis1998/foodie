@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GooglePhotosService } from '../../services/google-photos.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,10 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() {
+  constructor(private googlePhotosService: GooglePhotosService) {
   }
 
   ngOnInit(): void {
-
+    this.googlePhotosService.getAll().subscribe(e => console.log(e));
   }
 }

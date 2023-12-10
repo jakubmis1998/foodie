@@ -8,6 +8,7 @@ import { ListParams } from '../../../models/list-params';
 import { Emoji } from '../../../models/emoji';
 import { FirestorePlaceDataService } from '../../../services/firestore-data/firestore-place-data.service';
 import { FirestoreFoodDataService } from '../../../services/firestore-data/firestore-food-data.service';
+import { FirestoreConstantsDataService } from '../../../services/firestore-data/firestore-constants-data.service';
 
 @Component({
   selector: 'app-data-overview',
@@ -28,15 +29,23 @@ export class DataOverviewComponent implements OnInit, OnDestroy {
   dataChangedSubscription: Subscription;
   Emoji = Emoji;
 
-  private firestoreDataService: FirestoreFoodDataService | FirestorePlaceDataService;
+  private firestoreDataService: FirestoreFoodDataService | FirestorePlaceDataService | FirestoreConstantsDataService;
 
   constructor(private injector: Injector) {
   }
 
   ngOnInit(): void {
-    this.firestoreDataService = this.overviewType === OverviewType.PLACES ?
-      <FirestorePlaceDataService>this.injector.get(FirestorePlaceDataService) :
-      <FirestoreFoodDataService>this.injector.get(FirestoreFoodDataService);
+    switch (this.overviewType) {
+      case OverviewType.PLACES:
+        this.firestoreDataService = <FirestorePlaceDataService>this.injector.get(FirestorePlaceDataService);
+        break;
+      case OverviewType.FOOD:
+        this.firestoreDataService = <FirestoreFoodDataService>this.injector.get(FirestoreFoodDataService);
+        break;
+      case OverviewType.CONSTANTS:
+        this.firestoreDataService = <FirestoreConstantsDataService>this.injector.get(FirestoreConstantsDataService);
+        break;
+    }
 
     this.changePage();
     this.dataChangedSubscription = this.firestoreDataService.dataChanged.subscribe(() => this.changePage());
