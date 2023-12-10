@@ -17,6 +17,6 @@ export class NavigationComponent {
     { label: 'Food', filename: 'food', route: '/food-overview' },
     { label: 'Places', filename: 'restaurant', route: '/places-overview' },
     { label: 'Dashboard', filename: 'dashboard', route: '/dashboard' },
-    { label: 'Constants', filename: 'list', route: '/constants-overview' }
+    { label: 'Constants', filename: 'constants', route: '/constants-overview' }
   ];
 }

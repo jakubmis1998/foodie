@@ -46,7 +46,7 @@ export class CreateEditPlaceComponent implements OnInit, OnDestroy {
       this.placeId ? this.firestorePlaceDataService.get(this.placeId) : of({} as Place),
       this.firestoreConstantsDataService.getAll(
         undefined, false, new ListParams(
-          new SortingParams(), new FilterParams('type', ConstantType.PLACE_TYPE), new PaginationParams(0)
+          new SortingParams('name'), new FilterParams('type', ConstantType.PLACE_TYPE), new PaginationParams(0)
         )
       ).pipe(
         map(result => result.items)
@@ -68,7 +68,7 @@ export class CreateEditPlaceComponent implements OnInit, OnDestroy {
     const defaultRateValue = 2.5;
     this.form = this.fb.group({
       name: this.fb.control<string | undefined>(this.place?.name, [Validators.required]),
-      type: this.fb.control<string | undefined>(this.place?.type?.id, [Validators.required]),
+      type: this.fb.control<string | undefined>(this.place?.type, [Validators.required]),
       address: this.fb.control<ObjectType | undefined>(this.place?.address, this.placeId ? [] : [Validators.required]),
       rating: this.fb.group({
         localization: this.fb.control<number>(this.place?.rating?.localization || defaultRateValue),
@@ -111,7 +111,6 @@ export class CreateEditPlaceComponent implements OnInit, OnDestroy {
     data.changedAt = now;
     data.averageRating = getAverageRating(this.form.value.rating);
     data.tags = getDefaultTags(data, !!this.placeId);
-    data.type = this.placeTypes.find(placeType => placeType.id === data.type);
 
     return data;
   }

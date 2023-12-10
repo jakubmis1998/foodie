@@ -1,10 +1,9 @@
 import { ObjectType } from './utils';
 import { BaseModel } from './base-model';
-import { Constant } from './constant';
 
 export interface Place extends BaseModel {
   name: string;
-  type: Constant;
+  type: string;
   averageRating: number;
   rating: PlaceRating;
   address: ObjectType;

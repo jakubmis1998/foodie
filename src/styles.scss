@@ -8,3 +8,5 @@ $primary: #816ddb;
 @import "node_modules/bootstrap/scss/bootstrap";
 // custom
 @import './app/styles/index';
+// ng-select
+@import "~@ng-select/ng-select/themes/default.theme.css";

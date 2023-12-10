@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AutocompleteResult } from 'autocompleter';
+import autocomplete, { AutocompleteResult } from 'autocompleter';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, map, Observable, of, switchMap, zip } from 'rxjs';
 import { ObjectType } from '../../../models/utils';
-import autocomplete from 'autocompleter';
 import { getAverageRating } from '../../../shared/utils/rating';
 import { Emoji } from '../../../models/emoji';
 import { Food } from '../../../models/food';
@@ -32,7 +31,7 @@ export class CreateEditFoodComponent {
   autocomplete: AutocompleteResult;
   food: Food;
   place: Place;
-  foodTypes: Constant[];
+  foodCharacteristics: Observable<Constant[]>;
 
   @Input() foodId: string;
 
@@ -46,24 +45,22 @@ export class CreateEditFoodComponent {
   ) {}
 
   ngOnInit(): void {
-    forkJoin([
-      (this.foodId ? this.firestoreFoodDataService.get(this.foodId) : of({})).pipe(
-        map((food: Food | {}) => food as Food),
-        switchMap((food: Food) => {
-          return zip(of(food), food.placeId ? this.firestorePlaceDataService.get(food.placeId) : of({}))
-        })
-      ),
-      this.firestoreConstantsDataService.getAll(
-        undefined, false, new ListParams(
-          new SortingParams(), new FilterParams('type', ConstantType.FOOD_TYPE), new PaginationParams(0)
-        )
-      ).pipe(
-        map(result => result.items)
+    this.foodCharacteristics = this.firestoreConstantsDataService.getAll(
+      undefined, false, new ListParams(
+        new SortingParams('name'), new FilterParams('type', ConstantType.FOOD_TYPE), new PaginationParams(0)
       )
-    ]).subscribe(result => {
-      this.food = result[0][0] as Food;
-      this.place = result[0][1] as Place;
-      this.foodTypes = result[1] as Constant[];
+    ).pipe(
+      map(result => result.items as Constant[])
+    );
+
+    (this.foodId ? this.firestoreFoodDataService.get(this.foodId) : of({})).pipe(
+      map((food: Food | {}) => food as Food),
+      switchMap((food: Food) => {
+        return zip(of(food), food.placeId ? this.firestorePlaceDataService.get(food.placeId) : of({}))
+      })
+    ).subscribe(result => {
+      this.food = result[0] as Food;
+      this.place = result[1] as Place;
       this.initForm();
       setTimeout(() => {
         this.initAutocomplete();
@@ -75,7 +72,7 @@ export class CreateEditFoodComponent {
     const defaultRateValue = 2.5;
     this.form = this.fb.group({
       name: this.fb.control<string | undefined>(this.food?.name, [Validators.required]),
-      type: this.fb.control<string | undefined>(this.food?.type?.id, [Validators.required]),
+      characteristics: this.fb.control<string[] | undefined>(this.food?.characteristics, [Validators.required]),
       price: this.fb.control<number | undefined>(this.food?.price, [Validators.required, Validators.min(0)]),
       rating: this.fb.group({
         taste: this.fb.control<number>(this.food?.rating?.taste || defaultRateValue),
@@ -123,13 +120,11 @@ export class CreateEditFoodComponent {
     data.averageRating = getAverageRating(this.form.value.rating);
     data.tags = this.form.value.tags;
     data.thumbnailUrl = this.food?.thumbnailUrl;
-    data.type = this.foodTypes.find(foodType => foodType.id === data.type);
 
     if (this.photoId) {
       return this.googlePhotosService.get(this.photoId).pipe(
         map(photo => {
           data.thumbnailUrl = photo.baseUrl;
-          data.photoId = this.photoId;
           return data;
         })
       );

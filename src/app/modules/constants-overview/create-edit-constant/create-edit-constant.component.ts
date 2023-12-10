@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { Emoji } from '../../../models/emoji';
-import { Constant, ConstantType } from '../../../models/constant';
+import { Constant, ConstantCategory, ConstantType } from '../../../models/constant';
 import { FirestoreConstantsDataService } from '../../../services/firestore-data/firestore-constants-data.service';
 
 @Component({
@@ -15,6 +15,7 @@ export class CreateEditConstantComponent implements OnInit {
 
   Emoji = Emoji;
   ConstantType = ConstantType;
+  ConstantCategory = ConstantCategory;
   form: FormGroup;
   loading = false;
 
@@ -34,16 +35,9 @@ export class CreateEditConstantComponent implements OnInit {
   initForm(): void {
     this.form = this.fb.group({
       name: this.fb.control<string | undefined>(this.constant?.name, [Validators.required]),
-      value: this.fb.control<string | undefined>({ value: this.constant?.value, disabled: !!this.constant }, [Validators.required]),
+      category: this.fb.control<ConstantCategory | undefined>(this.constant?.category, this.constantType === ConstantType.FOOD_TYPE ? [Validators.required] : []),
       type: this.fb.control<ConstantType>({ value: this.constant?.type || this.constantType, disabled: true }, [Validators.required])
     });
-
-    if (!this.constant) {
-      this.form.get('name')?.valueChanges.subscribe(value => {
-        const newValue = value.replaceAll(' ', '_').toUpperCase();
-        this.form.get('value')?.setValue(newValue);
-      });
-    }
   }
 
   save(): void {
@@ -71,5 +65,4 @@ export class CreateEditConstantComponent implements OnInit {
   isValidField(fieldName: string, validationType = 'required'): boolean {
     return (this.form.get(fieldName)?.touched) && this.form.get(fieldName)?.errors?.[validationType];
   }
-
 }

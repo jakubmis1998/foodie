@@ -19,7 +19,7 @@
 <ng-template #dataItem let-item>
   <div class="constant-item d-flex flex-row align-items-center px-2">
     <div class="cursor-pointer text-truncate text-secondary fw-bold w-100" (click)="updateConstant(item)">
-      {{ item.name }}
+      {{ item.category ? item.category + ' - ' : '' }}{{ item.name }}
     </div>
     <fa-icon class="cursor-pointer text-secondary f-2x ms-2" [icon]="faRemove" (click)="deleteConstant(item.id)"></fa-icon>
   </div>

@@ -21,12 +21,12 @@ export class ConstantsTableComponent {
   ConstantType = ConstantType;
   faRemove = faRemove;
   placeListParams = new ListParams(
-    new SortingParams(),
+    new SortingParams('name'),
     new FilterParams('type', ConstantType.PLACE_TYPE),
     new PaginationParams(0)
   );
   foodListParams = new ListParams(
-    new SortingParams(),
+    new SortingParams('category'),
     new FilterParams('type', ConstantType.FOOD_TYPE),
     new PaginationParams(0)
   );
@@ -37,13 +37,13 @@ export class ConstantsTableComponent {
   ) {}
 
   createConstant(constantType: ConstantType): void {
-    const modalRef = this.modalService.open(CreateEditConstantComponent, { centered: true });
+    const modalRef = this.modalService.open(CreateEditConstantComponent, { centered: true, size: 'lg' });
     (modalRef.componentInstance as CreateEditConstantComponent).constantType = constantType;
     modalRef.result.catch(() => {});
   }
 
   updateConstant(constant: Constant): void {
-    const modalRef = this.modalService.open(CreateEditConstantComponent, { centered: true });
+    const modalRef = this.modalService.open(CreateEditConstantComponent, { centered: true, size: 'lg' });
     (modalRef.componentInstance as CreateEditConstantComponent).constant = constant;
     (modalRef.componentInstance as CreateEditConstantComponent).constantType = constant.type;
     modalRef.result.catch(() => {});

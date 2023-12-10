@@ -31,20 +31,6 @@
     </div>
 
     <div class="mb-3 row align-items-center">
-      <label for="type" class="col-sm-2 col-form-label required">Type</label>
-      <div class="col-sm-10">
-        <select formControlName="type" class="form-select" id="type">
-          <option *ngFor="let foodType of foodTypes" [value]="foodType.id">
-            {{ foodType.name }}
-          </option>
-        </select>
-        <div *ngIf="isValidField('type')" class="validation-message">
-          Please choose a food type.
-        </div>
-      </div>
-    </div>
-
-    <div class="mb-3 row align-items-center">
       <label for="cost" class="col-sm-2 col-form-label required">Price</label>
       <div class="col-sm-10">
         <div class="d-flex">
@@ -58,6 +44,31 @@
         </div>
         <div *ngIf="isValidField('price', 'min')" class="validation-message">
           Price must be higher than 0.
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3 row align-items-center">
+      <label class="col-sm-2 col-form-label required">Charact.</label>
+      <div class="col-sm-10">
+        <ng-select [items]="foodCharacteristics | async"
+                   [multiple]="true"
+                   bindLabel="name"
+                   bindValue="name"
+                   groupBy="category"
+                   [selectableGroup]="false"
+                   [selectableGroupAsModel]="false"
+                   [closeOnSelect]="false"
+                   formControlName="characteristics">
+          <ng-template ng-optgroup-tmp let-item="item">
+            {{ item.category | uppercase }}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{index}}" type="checkbox" [checked]="item$.selected || (food.characteristics && food.characteristics.includes(item.name))"/> {{ item.name }}
+          </ng-template>
+        </ng-select>
+        <div *ngIf="isValidField('type')" class="validation-message">
+          Please choose a food type.
         </div>
       </div>
     </div>

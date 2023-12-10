@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { foodOverviewRoutes } from './food-overview-routing';
 import { FoodTableComponent } from './food-table/food-table.component';
 import { FoodDetailsComponent } from './food-details/food-details.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { CreateEditFoodComponent } from './create-edit-food/create-edit-food.component';
 import { TagInputModule } from 'ngx-chips';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,7 +28,8 @@ import { FirestoreConstantsDataService } from '../../services/firestore-data/fir
     RouterModule.forChild(foodOverviewRoutes),
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    NgSelectModule
   ],
   providers: [
     FirestoreFoodDataService,

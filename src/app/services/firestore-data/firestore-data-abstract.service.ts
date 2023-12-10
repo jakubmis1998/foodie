@@ -10,7 +10,7 @@ import {
   QuerySnapshot
 } from '../../models/firebaseModel';
 import { ObjectType } from '../../models/utils';
-import { ListParams, ListResponse } from '../../models/list-params';
+import { ListParams, ListResponse, SortDirection } from '../../models/list-params';
 
 @Injectable()
 export abstract class FirestoreDataAbstractService {
@@ -48,6 +48,7 @@ export abstract class FirestoreDataAbstractService {
       limited = paginated;
     }
 
+    const isSortingDesc = listParams.sorting.direction === SortDirection.DESC;
     return from(limited.get()).pipe(
       map((data: QuerySnapshot<DocumentData>) => {
         return {
@@ -59,6 +60,14 @@ export abstract class FirestoreDataAbstractService {
             };
           })
         };
+      }),
+      map((data: ListResponse) => {
+        if (listParams.sorting.column !== 'changedAt') {
+          data.items = data.items.sort(
+            (a: ObjectType, b: ObjectType) => a[listParams.sorting.column] > b[listParams.sorting.column] ? isSortingDesc ? 1 : -1 : isSortingDesc ? -1 : 1
+          );
+        }
+        return data;
       }),
       tap(result => {
         if (!result.docs.length) {

@@ -6,7 +6,7 @@
 
     <h2 class="text-secondary">{{ food.name }}</h2>
     <div class="text-center text-secondary mb-2">
-      {{ food.type.name }}
+      {{ (food.characteristics || []).join(', ') }}
     </div>
     <div class="text-center text-secondary">{{ place.address.display_name }}</div>
 

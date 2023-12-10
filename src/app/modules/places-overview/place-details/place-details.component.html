@@ -5,8 +5,11 @@
   <ng-container *ngIf="!loading">
 
     <h2 class="text-secondary">{{ place.name }}</h2>
+    <div class="text-center text-secondary">
+      Original type: {{ format(place.address.type) | uppercase }}
+    </div>
     <div class="text-center text-secondary mb-2">
-      {{ format(place.address.type) | uppercase }} / {{ place.type.name }}
+      Your type: {{ place.type | uppercase }}
     </div>
     <div class="text-center text-secondary">{{ place.address.display_name }}</div>
 

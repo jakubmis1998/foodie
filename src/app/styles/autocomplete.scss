@@ -1,4 +1,19 @@
-@import "variables";
+@import 'variables';
+
+@mixin select-option {
+  font-size: 1rem;
+  padding: .25rem .5rem;
+  text-overflow: ellipsis;
+
+  &:nth-child(2n) {
+    background-color: $background-content;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: lightgray;
+  }
+}
 
 div.autocomplete {
   background-color: white;
@@ -8,17 +23,11 @@ div.autocomplete {
   overflow: hidden;
 
   div[role="option"] {
-    font-size: 1rem;
-    padding: .25rem .5rem;
-    text-overflow: ellipsis;
-
-    &:nth-child(2n) {
-      background-color: $background-content;
-    }
-
-    &:hover {
-      cursor: pointer;
-      background-color: lightgray;
-    }
+    @include select-option;
   }
+}
+
+select option {
+  @include select-option;
+  font-size: 1.3rem;
 }
