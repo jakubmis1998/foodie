@@ -6,6 +6,7 @@ import { FirestoreFoodDataService } from '../../../services/firestore-data/fires
 import { map, of, switchMap, zip } from 'rxjs';
 import { FirestorePlaceDataService } from '../../../services/firestore-data/firestore-place-data.service';
 import { Place } from '../../../models/place';
+import { GooglePhotosService } from '../../../services/google-photos.service';
 
 @Component({
   selector: 'app-food-details',
@@ -15,6 +16,7 @@ import { Place } from '../../../models/place';
 export class FoodDetailsComponent {
 
   loading = true;
+  photoURL: string;
   food: Food;
   place: Place;
 
@@ -22,7 +24,8 @@ export class FoodDetailsComponent {
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private firestoreFoodDataService: FirestoreFoodDataService,
-    private firestorePlaceDataService: FirestorePlaceDataService
+    private firestorePlaceDataService: FirestorePlaceDataService,
+    private googlePhotosService: GooglePhotosService
   ) {
   }
 
@@ -31,11 +34,16 @@ export class FoodDetailsComponent {
     this.firestoreFoodDataService.get(foodId).pipe(
       map(food => food as Food),
       switchMap((food: Food) => {
-        return zip(of(food), this.firestorePlaceDataService.get(food.placeId))
+        return zip(
+          of(food),
+          this.firestorePlaceDataService.get(food.placeId),
+          this.googlePhotosService.get(food.photoId).pipe(map(photo => photo.baseUrl))
+        )
       })
     ).subscribe(result => {
       this.food = result[0] as Food;
       this.place = result[1] as Place;
+      this.photoURL = result[2] as string;
       this.loading = false;
     });
   }

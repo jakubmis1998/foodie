@@ -5,7 +5,7 @@ export interface Food extends BaseModel {
   characteristics: string[];
   averageRating: number;
   rating: FoodRating;
-  thumbnailUrl: string;
+  photoId: string;
   placeId: string;
   price: number;
 }

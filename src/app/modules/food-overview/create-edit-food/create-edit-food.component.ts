@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import autocomplete, { AutocompleteResult } from 'autocompleter';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { forkJoin, map, Observable, of, switchMap, zip } from 'rxjs';
+import { map, Observable, of, switchMap, tap, zip } from 'rxjs';
 import { ObjectType } from '../../../models/utils';
 import { getAverageRating } from '../../../shared/utils/rating';
 import { Emoji } from '../../../models/emoji';
@@ -14,6 +14,7 @@ import { FilterParams, ListParams, PaginationParams, SortingParams } from '../..
 import { GooglePhotosService } from '../../../services/google-photos.service';
 import { Constant, ConstantType } from '../../../models/constant';
 import { FirestoreConstantsDataService } from '../../../services/firestore-data/firestore-constants-data.service';
+import { GooglePhoto } from '../../../models/googlePhoto';
 
 @Component({
   selector: 'app-create-edit-food',
@@ -25,9 +26,7 @@ export class CreateEditFoodComponent {
   Emoji = Emoji;
   form: FormGroup;
   loading = false;
-  photoLoading = false;
-  photoUrl: string;
-  photoId: string;
+  selectedImage: { filename?: string; result?: ArrayBuffer; photoURL?: string } | undefined = undefined;
   autocomplete: AutocompleteResult;
   food: Food;
   place: Place;
@@ -57,10 +56,16 @@ export class CreateEditFoodComponent {
       map((food: Food | {}) => food as Food),
       switchMap((food: Food) => {
         return zip(of(food), food.placeId ? this.firestorePlaceDataService.get(food.placeId) : of({}))
-      })
-    ).subscribe(result => {
-      this.food = result[0] as Food;
-      this.place = result[1] as Place;
+      }),
+      tap(result => {
+        this.food = result[0] as Food;
+        this.place = result[1] as Place;
+      }),
+      switchMap(() => this.food.photoId ? this.googlePhotosService.get(this.food.photoId) : of(undefined))
+    ).subscribe(photo => {
+      this.selectedImage = {
+        photoURL: photo?.baseUrl
+      };
       this.initForm();
       setTimeout(() => {
         this.initAutocomplete();
@@ -88,9 +93,12 @@ export class CreateEditFoodComponent {
   save(): void {
     this.loading = true;
     let saveCall: Observable<void>;
-    if (this.form.valid) {
-      this.getFormData().pipe(
-        switchMap(formData => {
+    if (this.form.valid && this.selectedImage) {
+      const imageChanged = !!this.selectedImage?.filename;
+      (imageChanged ? this.googlePhotosService.create(this.selectedImage.result!, this.selectedImage.filename!) : of({} as GooglePhoto)).pipe(
+        switchMap((photo) => {
+          const formData = this.getFormData();
+          formData.photoId = photo?.id || this.food.photoId;
           if (!this.foodId) {
             saveCall = this.firestoreFoodDataService.create(formData);
           } else {
@@ -109,7 +117,7 @@ export class CreateEditFoodComponent {
     }
   }
 
-  getFormData(): Observable<ObjectType> {
+  getFormData(): ObjectType {
     const data = this.form.value;
     const nameTags = data.name.toLowerCase().split(' ');
     this.form.get('tags')?.setValue([...new Set([...this.form.value.tags, ...nameTags])]);
@@ -119,18 +127,8 @@ export class CreateEditFoodComponent {
     data.changedAt = now;
     data.averageRating = getAverageRating(this.form.value.rating);
     data.tags = this.form.value.tags;
-    data.thumbnailUrl = this.food?.thumbnailUrl;
 
-    if (this.photoId) {
-      return this.googlePhotosService.get(this.photoId).pipe(
-        map(photo => {
-          data.thumbnailUrl = photo.baseUrl;
-          return data;
-        })
-      );
-    }
-
-    return of(data as ObjectType);
+    return data;
   }
 
   getFieldValue(fieldName: string): any {
@@ -146,15 +144,15 @@ export class CreateEditFoodComponent {
   }
 
   addPhoto(event: any): void {
-    this.photoLoading = true;
     const file = event.target.files[0];
     const myReader = new FileReader();
-    myReader.onloadend = () => this.googlePhotosService.create(myReader.result as ArrayBuffer, file.name).subscribe(photo => {
-      // Save newly added photo ID and URL
-      this.photoUrl = URL.createObjectURL(file);
-      this.photoId = photo.id;
-      this.photoLoading = false;
-    });
+    myReader.onloadend = () => {
+      this.selectedImage = {
+        filename: file.name,
+        result: myReader.result as ArrayBuffer,
+        photoURL: URL.createObjectURL(file)
+      };
+    };
     myReader.readAsArrayBuffer(file);
   }
 
