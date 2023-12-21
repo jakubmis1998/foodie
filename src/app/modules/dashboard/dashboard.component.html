@@ -1,1 +1,13 @@
-<p>dashboard works!</p>
+<div class="h-100 mx-5 py-4">
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <app-loading *ngIf="!food || !places; else charts"></app-loading>
+  </div>
+</div>
+
+<ng-template #charts>
+  <highcharts-chart
+    class="w-100"
+    [Highcharts]="Highcharts"
+    [options]="pricePerPlaceOptions"
+  ></highcharts-chart>
+</ng-template>

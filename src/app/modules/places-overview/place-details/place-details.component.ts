@@ -124,7 +124,10 @@ export class PlaceDetailsComponent implements OnInit {
       },
       yAxis: {
         title: {
-          text: 'Price'
+          text: 'Total price'
+        },
+        labels: {
+          format: '{text} zł'
         }
       },
       tooltip: {

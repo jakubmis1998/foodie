@@ -1,4 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { FirestorePlaceDataService } from '../../services/firestore-data/firestore-place-data.service';
+import { FirestoreFoodDataService } from '../../services/firestore-data/firestore-food-data.service';
+import { forkJoin } from 'rxjs';
+import { Food } from '../../models/food';
+import { Place } from '../../models/place';
+import { ListResponse } from '../../models/list-params';
+import * as Highcharts from 'highcharts';
+import { groupBy } from '../../shared/utils/utils';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,9 +15,91 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() {
+  Highcharts: typeof Highcharts = Highcharts;
+  pricePerPlaceOptions: Highcharts.Options;
+  food: Food[];
+  places: Place[];
+
+  constructor(
+    private firestorePlaceDataService: FirestorePlaceDataService,
+    private firestoreFoodDataService: FirestoreFoodDataService
+  ) {
+
   }
 
   ngOnInit(): void {
+    forkJoin([
+      this.firestoreFoodDataService.getAll(),
+      this.firestorePlaceDataService.getAll()
+    ]).subscribe(
+      (data: [ListResponse, ListResponse]) => {
+        this.food = data[0].items as Food[];
+        this.places = data[1].items as Place[];
+        this.getOptions();
+      }
+    );
+  }
+
+  getOptions(): void {
+    const data = this.pricePerPlaceData();
+    this.pricePerPlaceOptions = {
+      accessibility: {
+        enabled: false
+      },
+      chart: {
+        type: 'column',
+        backgroundColor: 'transparent'
+      },
+      title: {
+        text: 'Total price per place (including dishes count)',
+        margin: 25
+      },
+      yAxis: {
+        title: {
+          text: 'Total price'
+        },
+        labels: {
+          format: '{text} zł'
+        }
+      },
+      xAxis: {
+        categories: data.map(item => item[0]),
+        crosshair: true
+      },
+      tooltip: {
+        valueSuffix: ' zł'
+      },
+      series: [
+        {
+          name: 'Total price',
+          dataLabels: {
+            enabled: true,
+            crop: false,
+            overflow: 'allow',
+            format: '{y:,.2f} zł',
+            style: {
+              fontSize: '15'
+            }
+          },
+          data
+        }
+      ]
+    } as Highcharts.Options;
+  }
+
+  pricePerPlaceData(): [string, number][] {
+    const grouped = groupBy(this.food, (food: Food) => food.placeId);
+
+    const pricesPerPlace: [string, number][] = [];
+    this.places.forEach(place => {
+      const foodOfPlace = grouped.get(place.id) as Food[] || [];
+      if (foodOfPlace.length) {
+        pricesPerPlace.push([`${place.name} (${foodOfPlace.length})`, foodOfPlace.reduce((sum: number, val: Food) => sum + val.price, 0)]);
+      } else {
+        pricesPerPlace.push([`${place.name} (0)`, 0]);
+      }
+    });
+
+    return pricesPerPlace.sort((a, b) => a[1] - b[1]);
   }
 }
