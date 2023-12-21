@@ -37,7 +37,7 @@
     <div class="item-footer text-center pb-3">
       <div class="d-flex justify-content-between align-items-center mb-2 px-2">
         <div class="d-block w-25">
-          <div class="fw-bold text-primary">23</div>
+          <div class="fw-bold text-primary">{{ getDishesCount(item) | async }}</div>
           <span class="small text-secondary">Dishes</span>
         </div>
         <div class="d-block w-auto">
@@ -46,7 +46,7 @@
         </div>
         <div class="d-block w-25">
           <div class="d-flex justify-content-center fw-bold text-primary">
-            {{ 4.3 | number: '0.1' }}
+            {{ getFoodRating(item) | async | number: '0.1-1' }}
             <span>{{ Emoji.star | emoji }}</span>
           </div>
           <span class="small text-secondary">Food</span>

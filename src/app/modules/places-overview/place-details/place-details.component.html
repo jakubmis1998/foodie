@@ -9,7 +9,7 @@
       Original type: {{ format(place.address.type) | uppercase }}
     </div>
     <div class="text-center text-secondary mb-2">
-      Your type: {{ place.type | uppercase }}
+      Your types: {{ (place.types || []).join(', ') | uppercase }}
     </div>
     <div class="text-center text-secondary">{{ place.address.display_name }}</div>
 
@@ -35,22 +35,33 @@
           <ng-container *ngIf="!place.address.extratags">No extra tags</ng-container>
         </div>
         <div *ngIf="place.address.extratags">
-          <div class="extra" *ngFor="let extraTag of getExtras()">
+          <div class="extra text-secondary" *ngFor="let extraTag of getExtras()">
             <strong>{{ extraTag[0] }}:</strong> {{ extraTag[1] }}
           </div>
         </div>
       </div>
     </div>
 
+    <div class="divider text-center text-secondary my-3">Food from this place</div>
+    <highcharts-chart
+      class="w-100"
+      [Highcharts]="Highcharts"
+      [options]="foodChartOptions"
+    ></highcharts-chart>
+    <div class="d-flex flex-column justify-content-center align-items-center fw-bold mb-5 text-secondary">
+      <span class="me-2">Dishes: {{ foodOfPlace.length }}</span>
+      <span>Total price: {{ getFoodPriceSum() }} zł</span>
+    </div>
+
     <div class="divider text-center text-secondary my-3">Rating chart</div>
     <highcharts-chart
       class="mb-5"
       [Highcharts]="Highcharts"
-      [options]="options"
+      [options]="ratingOptions"
     ></highcharts-chart>
 
-    <span><strong>Created at:</strong> {{ place.createdAt | date: 'MMMM d y, HH:mm:ss (EEEE)' }}</span>
-    <span><strong>Last update at:</strong> {{ place.changedAt | date: 'MMMM d y, HH:mm:ss (EEEE)' }}</span>
+    <span class="text-secondary"><strong>Created at:</strong> {{ place.createdAt | date: 'MMMM d y, HH:mm:ss (EEEE)' }}</span>
+    <span class="text-secondary"><strong>Last update at:</strong> {{ place.changedAt | date: 'MMMM d y, HH:mm:ss (EEEE)' }}</span>
   </ng-container>
 
   <button class="btn btn-outline-secondary mt-5" type="button" (click)="goBack()">Go back</button>

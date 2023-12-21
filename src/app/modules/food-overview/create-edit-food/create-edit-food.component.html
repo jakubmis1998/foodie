@@ -64,7 +64,7 @@
             {{ item.category | uppercase }}
           </ng-template>
           <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-            <input id="item-{{index}}" type="checkbox" [checked]="item$.selected || (food.characteristics && food.characteristics.includes(item.name))"/> {{ item.name }}
+            <input id="item-{{index}}" type="checkbox" [checked]="item$.selected"/> {{ item.name }}
           </ng-template>
         </ng-select>
         <div *ngIf="isValidField('type')" class="validation-message">

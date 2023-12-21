@@ -3,7 +3,7 @@ import { BaseModel } from './base-model';
 
 export interface Place extends BaseModel {
   name: string;
-  type: string;
+  types: string[];
   averageRating: number;
   rating: PlaceRating;
   address: ObjectType;
@@ -14,5 +14,5 @@ export interface PlaceRating {
   staff: number;
   comfort: number;
   prices: number;
-  cleanliness: number;
+  design: number;
 }

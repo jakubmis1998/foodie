@@ -8,10 +8,12 @@ import { faEdit } from '@fortawesome/free-regular-svg-icons';
 import { faRemove, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { LocationService } from '../../../services/location.service';
-import { Observable } from 'rxjs';
-import { ListParams } from '../../../models/list-params';
+import { map, Observable } from 'rxjs';
+import { FilterParams, ListParams, PaginationParams, SortingParams } from '../../../models/list-params';
 import { FirestorePlaceDataService } from '../../../services/firestore-data/firestore-place-data.service';
 import { OverviewType } from '../../../models/utils';
+import { FirestoreFoodDataService } from '../../../services/firestore-data/firestore-food-data.service';
+import { Food } from '../../../models/food';
 
 @Component({
   selector: 'app-place-table',
@@ -28,9 +30,12 @@ export class PlaceTableComponent {
   listParams = new ListParams();
 
   cachedDistances = {};
+  cachedDishesCount = {};
+  cachedFoodRating = {};
 
   constructor(
-    public firestorePlaceDataService: FirestorePlaceDataService,
+    private firestorePlaceDataService: FirestorePlaceDataService,
+    private firestoreFoodDataService: FirestoreFoodDataService,
     private modalService: NgbModal,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -66,6 +71,43 @@ export class PlaceTableComponent {
       this.cachedDistances[item.id] = this.locationService.getDistance({ latitude: item.address.lat, longitude: item.address.lon });
     }
     return this.cachedDistances[item.id];
+  }
+
+  getDishesCount(place: Place): Observable<number> {
+    if (!Object.keys(this.cachedDishesCount).length || !this.cachedDishesCount[place.id]) {
+      this.cachedDishesCount[place.id] = this.firestoreFoodDataService.getAll(
+        undefined, undefined, new ListParams(
+          new SortingParams(),
+          new FilterParams('placeId', place.id),
+          new PaginationParams(0)
+        )
+      ).pipe(
+        map(response => response.items.length)
+      )
+    }
+    return this.cachedDishesCount[place.id];
+  }
+
+  getFoodRating(place: Place): Observable<number> {
+    if (!Object.keys(this.cachedFoodRating).length || !this.cachedFoodRating[place.id]) {
+      this.cachedFoodRating[place.id] = this.firestoreFoodDataService.getAll(
+        undefined, undefined, new ListParams(
+          new SortingParams(),
+          new FilterParams('placeId', place.id),
+          new PaginationParams(0)
+        )
+      ).pipe(
+        map(response => response.items.map(item => (item as Food).averageRating)),
+        map(response => {
+          const count = response.length;
+          if (count > 0) {
+            return response.reduce((sum: number, val: number) => sum + val, 0) / response.length;
+          }
+          return 0;
+        })
+      )
+    }
+    return this.cachedFoodRating[place.id];
   }
 
   refresh(): void {

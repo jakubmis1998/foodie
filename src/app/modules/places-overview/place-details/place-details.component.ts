@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Place } from '../../../models/place';
 import * as Highcharts from 'highcharts';
 import { FirestorePlaceDataService } from '../../../services/firestore-data/firestore-place-data.service';
+import { FirestoreFoodDataService } from '../../../services/firestore-data/firestore-food-data.service';
+import { forkJoin, map } from 'rxjs';
+import { FilterParams, ListParams, PaginationParams, SortingParams } from '../../../models/list-params';
+import { Food } from '../../../models/food';
 
 @Component({
   selector: 'app-place-details',
@@ -13,21 +17,36 @@ import { FirestorePlaceDataService } from '../../../services/firestore-data/fire
 export class PlaceDetailsComponent implements OnInit {
 
   Highcharts: typeof Highcharts = Highcharts;
-  options: Highcharts.Options;
+  ratingOptions: Highcharts.Options;
+  foodChartOptions: Highcharts.Options;
   loading = true;
   place: Place;
+  foodOfPlace: Food[];
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private location: Location,
-    private firestorePlaceDataService: FirestorePlaceDataService
+    private firestorePlaceDataService: FirestorePlaceDataService,
+    private firestoreFoodDataService: FirestoreFoodDataService
   ) {
   }
 
   ngOnInit(): void {
     const placeId = this.activatedRoute.snapshot.paramMap.get('id')!;
-    this.firestorePlaceDataService.get(placeId).subscribe(place => {
-      this.place = place as Place;
+    forkJoin([
+      this.firestorePlaceDataService.get(placeId),
+      this.firestoreFoodDataService.getAll(
+        undefined, undefined, new ListParams(
+          new SortingParams('createdAt'),
+          new FilterParams('placeId', placeId),
+          new PaginationParams(0)
+        )
+      ).pipe(
+        map(response => response.items)
+      )
+    ]).subscribe(result => {
+      this.place = result[0] as Place;
+      this.foodOfPlace = result[1] as Food[];
       this.setChartOptions();
       this.loading = false;
     });
@@ -41,7 +60,7 @@ export class PlaceDetailsComponent implements OnInit {
   }
 
   setChartOptions(): void {
-    this.options = {
+    this.ratingOptions = {
       accessibility: {
         enabled: false
       },
@@ -54,7 +73,7 @@ export class PlaceDetailsComponent implements OnInit {
         margin: 25
       },
       xAxis: {
-        categories: ['Localization', 'Staff', 'Comfort', 'Prices', 'Cleanliness', 'Average'],
+        categories: ['Localization', 'Staff', 'Comfort', 'Prices', 'Design', 'Average'],
         crosshair: true
       },
       yAxis: {
@@ -80,12 +99,57 @@ export class PlaceDetailsComponent implements OnInit {
             this.place.rating.staff,
             this.place.rating.comfort,
             this.place.rating.prices,
-            this.place.rating.cleanliness,
+            this.place.rating.design,
             { y: this.place.averageRating, color: '#816ddb' }
           ]
         }
       ]
     } as Highcharts.Options;
+
+    this.foodChartOptions = {
+      accessibility: {
+        enabled: false
+      },
+      chart: {
+        type: 'column',
+        backgroundColor: 'transparent'
+      },
+      title: {
+        text: 'Food prices',
+        margin: 25
+      },
+      xAxis: {
+        categories: this.foodOfPlace.map(food => `${food.name} (${new DatePipe('en-US').transform(food.createdAt)})`),
+        crosshair: true
+      },
+      yAxis: {
+        title: {
+          text: 'Price'
+        }
+      },
+      tooltip: {
+        valueSuffix: ' zł'
+      },
+      series: [
+        {
+          name: 'Food prices',
+          dataLabels: {
+            enabled: true,
+            crop: false,
+            overflow: 'allow',
+            format: '{y} zł',
+            style: {
+              fontSize: '15'
+            }
+          },
+          data: this.foodOfPlace.map(food => food.price)
+        }
+      ]
+    } as Highcharts.Options;
+  }
+
+  getFoodPriceSum(): number {
+    return this.foodOfPlace.map(food => food.price).reduce((sum, val) => sum + val, 0);
   }
 
   format(str: string): string {

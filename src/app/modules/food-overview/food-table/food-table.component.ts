@@ -3,7 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Emoji } from '../../../models/emoji';
 import { faEdit } from '@fortawesome/free-regular-svg-icons';
-import { faRemove, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faRemove, faMagnifyingGlass, faEye } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { ListParams } from '../../../models/list-params';
 import { CreateEditFoodComponent } from '../create-edit-food/create-edit-food.component';
@@ -14,6 +14,7 @@ import { FirestorePlaceDataService } from '../../../services/firestore-data/fire
 import { map, Observable } from 'rxjs';
 import { Place } from '../../../models/place';
 import { GooglePhotosService } from '../../../services/google-photos.service';
+import { ImagePreviewComponent } from '../../../shared/components/image-preview/image-preview.component';
 
 @Component({
   selector: 'app-food-table',
@@ -25,6 +26,7 @@ export class FoodTableComponent {
   OverviewType = OverviewType;
   Emoji = Emoji;
   faEdit = faEdit;
+  faEye = faEye;
   faMagnifyingGlass = faMagnifyingGlass
   faRemove = faRemove;
   listParams = new ListParams();
@@ -69,6 +71,15 @@ export class FoodTableComponent {
   search(phrase?: string): void {
     this.listParams.filters.value = phrase;
     this.firestoreFoodDataService.dataChanged.next(undefined);
+  }
+
+  showThumbnail(food: Food): void {
+    const modalRef = this.modalService.open(ImagePreviewComponent, { centered: true, size: 'lg' });
+    (modalRef.componentInstance as ImagePreviewComponent).getPhotoUrl = () =>
+      this.googlePhotosService.get(food.photoId).pipe(
+        map(photo => photo.baseUrl)
+      );
+    modalRef.result.then(() => {}).catch(() => {});
   }
 
   getItemAddress(food: Food): Observable<string> {

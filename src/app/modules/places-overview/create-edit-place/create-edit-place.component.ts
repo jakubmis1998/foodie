@@ -28,7 +28,7 @@ export class CreateEditPlaceComponent implements OnInit, OnDestroy {
   loading = false;
   autocomplete: AutocompleteResult;
   place: Place;
-  placeTypes: Constant[];
+  placeTypes: Observable<Constant[]>;
 
   @Input() placeId: string;
 
@@ -42,20 +42,17 @@ export class CreateEditPlaceComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    forkJoin([
-      this.placeId ? this.firestorePlaceDataService.get(this.placeId) : of({} as Place),
-      this.firestoreConstantsDataService.getAll(
-        undefined, false, new ListParams(
-          new SortingParams('name'), new FilterParams('type', ConstantType.PLACE_TYPE), new PaginationParams(0)
-        )
-      ).pipe(
-        map(result => result.items)
+    this.placeTypes = this.firestoreConstantsDataService.getAll(
+      undefined, false, new ListParams(
+        new SortingParams('name'), new FilterParams('type', ConstantType.PLACE_TYPE), new PaginationParams(0)
       )
-    ]).subscribe(result => {
-      this.place = result[0] as Place;
-      this.placeTypes = result[1] as Constant[];
-      this.initForm();
+    ).pipe(
+      map(result => result.items as Constant[])
+    );
 
+    (this.placeId ? this.firestorePlaceDataService.get(this.placeId) : of({} as Place)).subscribe(result => {
+      this.place = result as Place;
+      this.initForm();
       if (!this.placeId) {
         setTimeout(() => {
           this.initAutocomplete();
@@ -68,14 +65,14 @@ export class CreateEditPlaceComponent implements OnInit, OnDestroy {
     const defaultRateValue = 2.5;
     this.form = this.fb.group({
       name: this.fb.control<string | undefined>(this.place?.name, [Validators.required]),
-      type: this.fb.control<string | undefined>(this.place?.type, [Validators.required]),
+      types: this.fb.control<string[] | undefined>(this.place?.types, [Validators.required]),
       address: this.fb.control<ObjectType | undefined>(this.place?.address, this.placeId ? [] : [Validators.required]),
       rating: this.fb.group({
         localization: this.fb.control<number>(this.place?.rating?.localization || defaultRateValue),
         staff: this.fb.control<number>(this.place?.rating?.staff || defaultRateValue),
         comfort: this.fb.control<number>(this.place?.rating?.comfort || defaultRateValue),
         prices: this.fb.control<number>(this.place?.rating?.prices || defaultRateValue),
-        cleanliness: this.fb.control<number>(this.place?.rating?.cleanliness || defaultRateValue)
+        design: this.fb.control<number>(this.place?.rating?.design || defaultRateValue)
       }),
       tags: this.fb.control<string[]>(this.place?.tags || [])
     });

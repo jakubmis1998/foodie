@@ -33,14 +33,20 @@
     </div>
 
     <div class="mb-3 row align-items-center">
-      <label for="type" class="col-sm-2 col-form-label required">Type</label>
+      <label class="col-sm-2 col-form-label required">Types</label>
       <div class="col-sm-10">
-        <select formControlName="type" class="form-select" id="type">
-          <option *ngFor="let placeType of placeTypes" [value]="placeType.name">
-            {{ placeType.name }}
-          </option>
-        </select>
-        <div *ngIf="isValidField('type')" class="validation-message">
+        <ng-select [items]="placeTypes | async"
+                   [multiple]="true"
+                   bindLabel="name"
+                   bindValue="name"
+                   [selectableGroupAsModel]="false"
+                   [closeOnSelect]="false"
+                   formControlName="types">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{index}}" type="checkbox" [checked]="item$.selected"/> {{ item.name }}
+          </ng-template>
+        </ng-select>
+        <div *ngIf="isValidField('types')" class="validation-message">
           Please choose a place type.
         </div>
       </div>
@@ -86,11 +92,11 @@
         </div>
       </div>
       <div class="mb-3 row align-items-center">
-        <label for="cleanliness" class="col-sm-2 col-form-label">Cleanliness</label>
+        <label for="design" class="col-sm-2 col-form-label">Design</label>
         <div class="col-sm-10 d-flex justify-content-center">
-          <input type="hidden" formControlName="cleanliness" class="form-control" id="cleanliness">
-          <ngx-stars color="#816ddb" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.cleanliness')"
-                     (ratingOutput)="setStarValue('rating.cleanliness', $event)">
+          <input type="hidden" formControlName="design" class="form-control" id="design">
+          <ngx-stars color="#816ddb" [size]="2" [maxStars]="5" [initialStars]="getFieldValue('rating.design')"
+                     (ratingOutput)="setStarValue('rating.design', $event)">
           </ngx-stars>
         </div>
       </div>

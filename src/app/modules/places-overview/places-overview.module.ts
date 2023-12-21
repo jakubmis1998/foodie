@@ -11,6 +11,8 @@ import { PlaceDetailsComponent } from './place-details/place-details.component';
 import { PlaceTableComponent } from './place-table/place-table.component';
 import { FirestorePlaceDataService } from '../../services/firestore-data/firestore-place-data.service';
 import { FirestoreConstantsDataService } from '../../services/firestore-data/firestore-constants-data.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FirestoreFoodDataService } from '../../services/firestore-data/firestore-food-data.service';
 
 @NgModule({
   declarations: [
@@ -25,10 +27,12 @@ import { FirestoreConstantsDataService } from '../../services/firestore-data/fir
     RouterModule.forChild(placesOverviewRoutes),
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    NgSelectModule
   ],
   providers: [
     FirestorePlaceDataService,
+    FirestoreFoodDataService,
     FirestoreConstantsDataService
   ]
 })

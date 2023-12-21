@@ -10,13 +10,15 @@ import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LeafletMapComponent } from './components/leaflet-map/leaflet-map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
 
 @NgModule({
   declarations: [
     LoadingComponent,
     DataOverviewComponent,
     ConfirmModalComponent,
-    LeafletMapComponent
+    LeafletMapComponent,
+    ImagePreviewComponent
   ],
   imports: [
     CommonModule,

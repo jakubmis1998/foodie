@@ -8,6 +8,7 @@ export interface Constant {
 export enum ConstantCategory {
   DISHES = 'Dishes',
   CATEGORY = 'Category',
+  CUISINE = 'Cuisine',
   MEAT = 'Meat',
   DAIRY = 'Dairy',
   BREADS = 'Breads',
