@@ -37,7 +37,7 @@
 
     <div class="item-footer d-flex justify-content-between pb-3 mx-3">
       <button class="btn btn-primary view-btn" (click)="goToDetails(item)">View details</button>
-      <button class="btn btn-primary rounded-circle" (click)="showThumbnail(item)">
+      <button class="btn btn-primary rounded-circle" [disabled]="!item.photoId" (click)="showThumbnail(item)">
         <fa-icon class="text-white" [icon]="faEye"></fa-icon>
       </button>
     </div>

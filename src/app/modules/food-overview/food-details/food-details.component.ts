@@ -37,7 +37,7 @@ export class FoodDetailsComponent {
         return zip(
           of(food),
           this.firestorePlaceDataService.get(food.placeId),
-          this.googlePhotosService.get(food.photoId).pipe(map(photo => photo.baseUrl))
+          food.photoId ? this.googlePhotosService.get(food.photoId).pipe(map(photo => photo.baseUrl)) : of(undefined)
         )
       })
     ).subscribe(result => {

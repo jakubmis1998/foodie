@@ -92,43 +92,46 @@ export class CreateEditFoodComponent {
 
   save(): void {
     this.loading = true;
-    let saveCall: Observable<void>;
-    if (this.form.valid && this.selectedImage) {
-      const imageChanged = !!this.selectedImage?.filename;
-      (imageChanged ? this.googlePhotosService.create(this.selectedImage.result!, this.selectedImage.filename!) : of({} as GooglePhoto)).pipe(
-        switchMap((photo) => {
-          const formData = this.getFormData();
-          formData.photoId = photo?.id || this.food.photoId;
-          if (!this.foodId) {
-            saveCall = this.firestoreFoodDataService.create(formData);
-          } else {
-            saveCall = this.firestoreFoodDataService.update(this.foodId, formData);
-          }
-          return saveCall;
-        })
-      ).subscribe(
-        () => {
-          this.loading = false;
-          this.activeModal.close();
-        }, () => this.loading = false
-      );
+    if (this.form.valid) {
+      this.getFormData().pipe(
+        switchMap(formData => this.foodId ?
+          this.firestoreFoodDataService.update(this.foodId, formData) :
+          this.firestoreFoodDataService.create(formData)
+        )
+      ).subscribe(() => {
+        this.loading = false;
+        this.activeModal.close();
+      }, () => this.loading = false);
     } else {
       this.loading = false;
     }
   }
 
-  getFormData(): ObjectType {
-    const data = this.form.value;
-    const nameTags = data.name.toLowerCase().split(' ');
+  getFormData(): Observable<ObjectType> {
+    const formData = this.form.value;
+    const nameTags = formData.name.toLowerCase().split(' ');
     this.form.get('tags')?.setValue([...new Set([...this.form.value.tags, ...nameTags])]);
 
     const now = Date.now();
-    data.createdAt = this.food?.createdAt || now;
-    data.changedAt = now;
-    data.averageRating = getAverageRating(this.form.value.rating);
-    data.tags = this.form.value.tags;
+    formData.createdAt = this.food?.createdAt || now;
+    formData.changedAt = now;
+    formData.averageRating = getAverageRating(this.form.value.rating);
+    formData.tags = this.form.value.tags;
 
-    return data;
+    // Photo
+    let call: Observable<GooglePhoto>;
+    if (this.selectedImage?.result && this.selectedImage?.filename) {
+      call = this.googlePhotosService.create(this.selectedImage.result, this.selectedImage.filename);
+    } else {
+      call = of({ id: this.food?.photoId } as GooglePhoto);
+    }
+
+    return call.pipe(
+      map((photo: GooglePhoto) => {
+        formData.photoId = photo.id || null;
+        return formData;
+      })
+    );
   }
 
   getFieldValue(fieldName: string): any {
