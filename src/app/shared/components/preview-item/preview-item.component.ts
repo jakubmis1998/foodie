@@ -24,7 +24,7 @@ export class PreviewItemComponent {
     if (hoursAgo > 0) {
       return { value: hoursAgo, label: 'hour(s)' };
     }
-    return { value: Math.round(timeDiff / 1000), label: 'minute(s)' };
+    return { value: Math.round(timeDiff / (1000 * 60)), label: 'minute(s)' };
   };
 
   constructor(
