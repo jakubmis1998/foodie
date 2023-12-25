@@ -11,6 +11,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LeafletMapComponent } from './components/leaflet-map/leaflet-map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
+import { PreviewItemComponent } from './components/preview-item/preview-item.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ImagePreviewComponent } from './components/image-preview/image-preview.
     DataOverviewComponent,
     ConfirmModalComponent,
     LeafletMapComponent,
-    ImagePreviewComponent
+    ImagePreviewComponent,
+    PreviewItemComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +37,8 @@ import { ImagePreviewComponent } from './components/image-preview/image-preview.
     NgbModule,
     PipesModule,
     HighchartsChartModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    PreviewItemComponent
   ]
 })
 export class SharedModule { }

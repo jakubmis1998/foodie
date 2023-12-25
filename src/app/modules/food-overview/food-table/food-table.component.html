@@ -27,8 +27,8 @@
       <fa-icon class="cursor-pointer text-secondary f-2x" [icon]="faRemove" (click)="deleteFood(item.id)"></fa-icon>
     </div>
 
-    <div class="item-content d-flex flex-column align-items-center justify-content-center mt-2 rounded w-100 h-100">
-      <div class="fw-bold text-secondary  f-2x text-center mb-2">{{ item.name }}</div>
+    <div class="item-content d-flex flex-column align-items-center justify-content-center mt-2 w-100 h-100">
+      <div class="text-secondary  f-2x text-center mb-2">{{ item.name }}</div>
       <div *ngIf="(getItemAddress(item) | async) as address; else loading" class="text-secondary text-wrap text-center mb-2">
         {{ address }}
       </div>

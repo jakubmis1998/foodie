@@ -1,0 +1,46 @@
+<div class="d-flex flex-column align-items-center">
+  <div class="d-flex flex-column align-items-center mb-1">
+    <span class="text-secondary">{{ item.createdAt | date: 'MMMM d y, HH:mm:ss (EEEE)' }}</span>
+    <span *ngIf="ago() as ago" class="text-secondary">
+      {{ ago.value }} {{ ago.label }} ago
+    </span>
+  </div>
+
+  <div class="overview-item d-flex flex-column px-3">
+    <div class="item-header d-flex justify-content-center pt-3">
+      <div class="rating px-2">
+        {{ item.averageRating | number: '0.1-1' }}
+        <span class="ms-1">{{ Emoji.star | emoji }}</span>
+      </div>
+    </div>
+
+    <ng-container *ngTemplateOutlet="isFood(item) ? foodContentTmpl : placeContentTmpl"></ng-container>
+
+    <div class="item-footer text-center pb-3">
+      <button class="btn btn-primary view-btn" (click)="goToDetails(item)">View details</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #foodContentTmpl>
+  <div class="item-content d-flex flex-column align-items-center justify-content-center mt-2 w-100 h-100">
+    <span class="text-secondary  f-2x text-center mb-2">{{ item.name }}</span>
+    <span class="text-secondary text-wrap text-center mb-2">
+      {{ item.characteristics.join(', ') }}
+    </span>
+    <span class="small text-secondary">{{ item.price | number: '1.2-2' }} zł</span>
+  </div>
+</ng-template>
+
+
+<ng-template #placeContentTmpl>
+  <div class="item-content d-flex flex-column align-items-center justify-content-center mt-2 w-100 h-100">
+    <span class="text-secondary f-2x mb-1">{{ item.name }}</span>
+    <span class="text-secondary text-wrap text-center mb-2">
+      {{ item.types.join(', ') }}
+    </span>
+    <span *ngIf="item.address.address.city" class="text-secondary">
+      {{ item.address.address.city }} {{ item.address.address.road ? ', ' + item.address.address.road: '' }} {{ item.address.address.house_number }}
+    </span>
+  </div>
+</ng-template>

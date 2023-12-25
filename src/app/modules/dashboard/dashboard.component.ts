@@ -4,7 +4,14 @@ import { FirestoreFoodDataService } from '../../services/firestore-data/firestor
 import { forkJoin } from 'rxjs';
 import { Food } from '../../models/food';
 import { Place } from '../../models/place';
-import { ListResponse } from '../../models/list-params';
+import {
+  FilterParams,
+  ListParams,
+  ListResponse,
+  PaginationParams,
+  SortDirection,
+  SortingParams
+} from '../../models/list-params';
 import * as Highcharts from 'highcharts';
 import { groupBy } from '../../shared/utils/utils';
 
@@ -19,22 +26,30 @@ export class DashboardComponent implements OnInit {
   pricePerPlaceOptions: Highcharts.Options;
   food: Food[];
   places: Place[];
+  totalSpendMoney = 0;
+  lastAddedPlace: Place | undefined;
+  lastAddedFood: Food | undefined;
 
   constructor(
     private firestorePlaceDataService: FirestorePlaceDataService,
     private firestoreFoodDataService: FirestoreFoodDataService
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     forkJoin([
-      this.firestoreFoodDataService.getAll(),
-      this.firestorePlaceDataService.getAll()
+      this.firestoreFoodDataService.getAll(
+        undefined, false, new ListParams(new SortingParams('createdAt', SortDirection.ASC), new FilterParams(), new PaginationParams())
+      ),
+      this.firestorePlaceDataService.getAll(
+        undefined, false, new ListParams(new SortingParams('createdAt', SortDirection.ASC), new FilterParams(), new PaginationParams())
+      )
     ]).subscribe(
       (data: [ListResponse, ListResponse]) => {
         this.food = data[0].items as Food[];
         this.places = data[1].items as Place[];
+        this.lastAddedPlace = this.places.length > 0 ? this.places[0] : undefined;
+        this.lastAddedFood = this.food.length > 0 ? this.food[0] : undefined;
+        this.totalSpendMoney = this.food.reduce((sum: number, val: Food) => sum + val.price, 0);
         this.getOptions();
       }
     );
@@ -72,6 +87,7 @@ export class DashboardComponent implements OnInit {
       series: [
         {
           name: 'Total price',
+          color: '#816ddb',
           dataLabels: {
             enabled: true,
             crop: false,

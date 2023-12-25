@@ -19,6 +19,7 @@ export class PlaceDetailsComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts;
   ratingOptions: Highcharts.Options;
   foodChartOptions: Highcharts.Options;
+  foodRatingOptions: Highcharts.Options;
   loading = true;
   place: Place;
   foodOfPlace: Food[];
@@ -28,8 +29,7 @@ export class PlaceDetailsComponent implements OnInit {
     private location: Location,
     private firestorePlaceDataService: FirestorePlaceDataService,
     private firestoreFoodDataService: FirestoreFoodDataService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     const placeId = this.activatedRoute.snapshot.paramMap.get('id')!;
@@ -69,7 +69,7 @@ export class PlaceDetailsComponent implements OnInit {
         backgroundColor: 'transparent'
       },
       title: {
-        text: 'Rating',
+        text: this.place.name,
         margin: 25
       },
       xAxis: {
@@ -84,7 +84,7 @@ export class PlaceDetailsComponent implements OnInit {
       },
       series: [
         {
-          name: 'Rating',
+          name: this.place.name,
           color: 'orange',
           dataLabels: {
             enabled: true,
@@ -119,7 +119,7 @@ export class PlaceDetailsComponent implements OnInit {
         margin: 25
       },
       xAxis: {
-        categories: this.foodOfPlace.map(food => `${food.name} (${new DatePipe('en-US').transform(food.createdAt)})`),
+        categories: this.foodOfPlace.map(food => `${food.name}<br>(${new DatePipe('en-US').transform(food.createdAt)})`),
         crosshair: true
       },
       yAxis: {
@@ -146,6 +146,50 @@ export class PlaceDetailsComponent implements OnInit {
             }
           },
           data: this.foodOfPlace.map(food => food.price)
+        }
+      ]
+    } as Highcharts.Options;
+
+    this.foodRatingOptions = {
+      accessibility: {
+        enabled: false
+      },
+      chart: {
+        type: 'column',
+        backgroundColor: 'transparent'
+      },
+      title: {
+        text: `Average food (${this.foodOfPlace.length} dishes) rating`,
+        margin: 25
+      },
+      xAxis: {
+        categories: ['Taste', 'Look / Design', 'Price', 'Portion size'],
+        crosshair: true
+      },
+      yAxis: {
+        max: 5
+      },
+      tooltip: {
+        valueSuffix: ' / 5'
+      },
+      series: [
+        {
+          name: 'Average food rating',
+          color: 'purple',
+          dataLabels: {
+            enabled: true,
+            crop: false,
+            overflow: 'allow',
+            style: {
+              fontSize: '15'
+            }
+          },
+          data: [
+            this.foodOfPlace.reduce((sum: number, val: Food) => sum + val.rating.taste, 0) / (this.foodOfPlace.length || 1),
+            this.foodOfPlace.reduce((sum: number, val: Food) => sum + val.rating.look, 0) / (this.foodOfPlace.length || 1),
+            this.foodOfPlace.reduce((sum: number, val: Food) => sum + val.rating.price, 0) / (this.foodOfPlace.length || 1),
+            this.foodOfPlace.reduce((sum: number, val: Food) => sum + val.rating.portionSize, 0) / (this.foodOfPlace.length || 1)
+          ]
         }
       ]
     } as Highcharts.Options;

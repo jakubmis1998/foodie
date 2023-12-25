@@ -42,6 +42,20 @@
       </div>
     </div>
 
+    <div class="divider text-center text-secondary my-3">Place rating chart</div>
+    <highcharts-chart
+      class="mb-5 w-100"
+      [Highcharts]="Highcharts"
+      [options]="ratingOptions"
+    ></highcharts-chart>
+
+    <div class="divider text-center text-secondary my-3">Average food rating chart</div>
+    <highcharts-chart
+      class="mb-5 w-100"
+      [Highcharts]="Highcharts"
+      [options]="foodRatingOptions"
+    ></highcharts-chart>
+
     <div class="divider text-center text-secondary my-3">Food from this place</div>
     <highcharts-chart
       class="w-100"
@@ -52,13 +66,6 @@
       <span class="me-2">Dishes: {{ foodOfPlace.length }}</span>
       <span>Total price: {{ getFoodPriceSum() }} zł</span>
     </div>
-
-    <div class="divider text-center text-secondary my-3">Rating chart</div>
-    <highcharts-chart
-      class="mb-5"
-      [Highcharts]="Highcharts"
-      [options]="ratingOptions"
-    ></highcharts-chart>
 
     <span class="text-secondary"><strong>Created at:</strong> {{ place.createdAt | date: 'MMMM d y, HH:mm:ss (EEEE)' }}</span>
     <span class="text-secondary"><strong>Last update at:</strong> {{ place.changedAt | date: 'MMMM d y, HH:mm:ss (EEEE)' }}</span>
