@@ -29,9 +29,9 @@
 
     <div class="item-content d-flex flex-column text-center text-truncate mt-5">
       <span class="text-secondary f-2x mb-1">{{ item.name }}</span>
-      <span *ngIf="item.address.address.city" class="text-secondary">
-        {{ item.address.address.city }} {{ item.address.address.road ? ', ' + item.address.address.road: '' }} {{ item.address.address.house_number }}
-      </span>
+      <div *ngIf="item.address.address.city || item.address.address.village" class="text-secondary">
+        {{ item.address.address.city || item.address.address.village }} {{ item.address.address.road ? ', ' + item.address.address.road: '' }} {{ item.address.address.house_number }}
+      </div>
     </div>
 
     <div class="item-footer text-center pb-3">

@@ -38,10 +38,10 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     forkJoin([
       this.firestoreFoodDataService.getAll(
-        undefined, false, new ListParams(new SortingParams('createdAt', SortDirection.ASC), new FilterParams(), new PaginationParams())
+        undefined, false, new ListParams(new SortingParams('createdAt', SortDirection.ASC), new FilterParams(), new PaginationParams(0))
       ),
       this.firestorePlaceDataService.getAll(
-        undefined, false, new ListParams(new SortingParams('createdAt', SortDirection.ASC), new FilterParams(), new PaginationParams())
+        undefined, false, new ListParams(new SortingParams('createdAt', SortDirection.ASC), new FilterParams(), new PaginationParams(0))
       )
     ]).subscribe(
       (data: [ListResponse, ListResponse]) => {
