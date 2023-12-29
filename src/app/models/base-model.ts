@@ -4,6 +4,7 @@ export interface BaseModel {
   id: string;
   createdAt: Date;
   changedAt: Date;
+  photoId: string | undefined;
   tags: string[];
 }
 

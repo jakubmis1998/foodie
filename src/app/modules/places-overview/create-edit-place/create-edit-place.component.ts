@@ -3,7 +3,7 @@ import { Emoji } from '../../../models/emoji';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Place } from '../../../models/place';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { forkJoin, map, Observable, of } from 'rxjs';
+import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { getAverageRating } from '../../../shared/utils/rating';
 import { LocationService } from '../../../services/location.service';
 import autocomplete from 'autocompleter';
@@ -15,6 +15,9 @@ import { FirestorePlaceDataService } from '../../../services/firestore-data/fire
 import { Constant, ConstantType } from '../../../models/constant';
 import { FirestoreConstantsDataService } from '../../../services/firestore-data/firestore-constants-data.service';
 import { FilterParams, ListParams, PaginationParams, SortingParams } from '../../../models/list-params';
+import { GooglePhotosService } from '../../../services/google-photos.service';
+import { GooglePhoto } from '../../../models/googlePhoto';
+import { faRemove } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-create-edit-place',
@@ -23,12 +26,14 @@ import { FilterParams, ListParams, PaginationParams, SortingParams } from '../..
 })
 export class CreateEditPlaceComponent implements OnInit, OnDestroy {
 
+  faRemove = faRemove;
   Emoji = Emoji;
   form: FormGroup;
   loading = false;
   autocomplete: AutocompleteResult;
   place: Place;
   placeTypes: Observable<Constant[]>;
+  selectedImage: { filename?: string; result?: ArrayBuffer; photoURL?: string } | undefined = undefined;
 
   @Input() placeId: string;
 
@@ -38,7 +43,8 @@ export class CreateEditPlaceComponent implements OnInit, OnDestroy {
     private firestoreConstantsDataService: FirestoreConstantsDataService,
     public activeModal: NgbActiveModal,
     private locationService: LocationService,
-    private osmService: OpenStreetService
+    private osmService: OpenStreetService,
+    private googlePhotosService: GooglePhotosService
   ) {}
 
   ngOnInit(): void {
@@ -50,8 +56,13 @@ export class CreateEditPlaceComponent implements OnInit, OnDestroy {
       map(result => result.items as Constant[])
     );
 
-    (this.placeId ? this.firestorePlaceDataService.get(this.placeId) : of({} as Place)).subscribe(result => {
-      this.place = result as Place;
+    (this.placeId ? this.firestorePlaceDataService.get(this.placeId) : of({})).pipe(
+      tap(result => this.place = result as Place),
+      switchMap(() => this.place.photoId ? this.googlePhotosService.get(this.place.photoId) : of(undefined))
+    ).subscribe(photo => {
+      this.selectedImage = {
+        photoURL: photo?.baseUrl
+      };
       this.initForm();
       if (!this.placeId) {
         setTimeout(() => {
@@ -80,18 +91,13 @@ export class CreateEditPlaceComponent implements OnInit, OnDestroy {
 
   save(): void {
     this.loading = true;
-    let saveCall: Observable<void>;
     if (this.form.valid) {
-
-      const formData = this.getFormData();
-
-      if (!this.placeId) {
-        saveCall = this.firestorePlaceDataService.create(formData);
-      } else {
-        saveCall = this.firestorePlaceDataService.update(this.placeId, formData);
-      }
-
-      saveCall.subscribe(() => {
+      this.getFormData().pipe(
+        switchMap(formData => this.placeId ?
+          this.firestorePlaceDataService.update(this.placeId, formData) :
+          this.firestorePlaceDataService.create(formData)
+        )
+      ).subscribe(() => {
         this.loading = false;
         this.activeModal.close();
       }, () => this.loading = false);
@@ -100,16 +106,29 @@ export class CreateEditPlaceComponent implements OnInit, OnDestroy {
     }
   }
 
-  getFormData(): ObjectType {
-    const data = this.form.value;
+  getFormData(): Observable<ObjectType> {
+    const formData = this.form.value;
 
     const now = Date.now();
-    data.createdAt = this.place?.createdAt || now;
-    data.changedAt = now;
-    data.averageRating = getAverageRating(this.form.value.rating);
-    data.tags = getDefaultTags(data, !!this.placeId);
+    formData.createdAt = this.place?.createdAt || now;
+    formData.changedAt = now;
+    formData.averageRating = getAverageRating(this.form.value.rating);
+    formData.tags = getDefaultTags(formData, true);
 
-    return data;
+    // Photo
+    let call: Observable<GooglePhoto>;
+    if (this.selectedImage?.result && this.selectedImage?.filename) {
+      call = this.googlePhotosService.create(this.selectedImage.result, this.selectedImage.filename);
+    } else {
+      call = of({ id: this.place?.photoId } as GooglePhoto);
+    }
+
+    return call.pipe(
+      map((photo: GooglePhoto) => {
+        formData.photoId = photo.id || null;
+        return formData;
+      })
+    );
   }
 
   getFieldValue(fieldName: string): any {
@@ -122,6 +141,26 @@ export class CreateEditPlaceComponent implements OnInit, OnDestroy {
 
   isValidField(fieldName: string, validationType = 'required'): boolean {
     return (this.form.get(fieldName)?.touched) && this.form.get(fieldName)?.errors?.[validationType];
+  }
+
+  addPhoto(event: any): void {
+    const file = event.target.files[0];
+    const myReader = new FileReader();
+    myReader.onloadend = () => {
+      this.selectedImage = {
+        filename: file.name,
+        result: myReader.result as ArrayBuffer,
+        photoURL: URL.createObjectURL(file)
+      };
+    };
+    myReader.readAsArrayBuffer(file);
+  }
+
+  deletePhoto(): void {
+    this.selectedImage = { photoURL: undefined };
+    if (this.place) {
+      this.place.photoId = undefined;
+    }
   }
 
   initAutocomplete(): void {

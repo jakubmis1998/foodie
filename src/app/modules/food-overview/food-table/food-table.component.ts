@@ -76,7 +76,7 @@ export class FoodTableComponent {
   showThumbnail(food: Food): void {
     const modalRef = this.modalService.open(ImagePreviewComponent, { centered: true, size: 'lg' });
     (modalRef.componentInstance as ImagePreviewComponent).getPhotoUrl = () =>
-      this.googlePhotosService.get(food.photoId).pipe(
+      this.googlePhotosService.get(food.photoId!).pipe(
         map(photo => photo.baseUrl)
       );
     modalRef.result.then(() => {}).catch(() => {});

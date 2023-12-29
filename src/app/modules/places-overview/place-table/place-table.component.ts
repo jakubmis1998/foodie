@@ -5,7 +5,7 @@ import { CreateEditPlaceComponent } from '../create-edit-place/create-edit-place
 import { Emoji } from '../../../models/emoji';
 import { Place } from '../../../models/place';
 import { faEdit } from '@fortawesome/free-regular-svg-icons';
-import { faRemove, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faRemove, faMagnifyingGlass, faEye } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { LocationService } from '../../../services/location.service';
 import { map, Observable } from 'rxjs';
@@ -14,6 +14,8 @@ import { FirestorePlaceDataService } from '../../../services/firestore-data/fire
 import { OverviewType } from '../../../models/utils';
 import { FirestoreFoodDataService } from '../../../services/firestore-data/firestore-food-data.service';
 import { Food } from '../../../models/food';
+import { ImagePreviewComponent } from '../../../shared/components/image-preview/image-preview.component';
+import { GooglePhotosService } from '../../../services/google-photos.service';
 
 @Component({
   selector: 'app-place-table',
@@ -25,6 +27,7 @@ export class PlaceTableComponent {
   Emoji = Emoji;
   OverviewType = OverviewType;
   faEdit = faEdit;
+  faEye = faEye;
   faMagnifyingGlass = faMagnifyingGlass
   faRemove = faRemove;
   listParams = new ListParams();
@@ -39,7 +42,8 @@ export class PlaceTableComponent {
     private modalService: NgbModal,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private googlePhotosService: GooglePhotosService
   ) {}
 
   createPlace(): void {
@@ -108,6 +112,15 @@ export class PlaceTableComponent {
       )
     }
     return this.cachedFoodRating[place.id];
+  }
+
+  showThumbnail(place: Place): void {
+    const modalRef = this.modalService.open(ImagePreviewComponent, { centered: true, size: 'lg' });
+    (modalRef.componentInstance as ImagePreviewComponent).getPhotoUrl = () =>
+      this.googlePhotosService.get(place.photoId!).pipe(
+        map(photo => photo.baseUrl)
+      );
+    modalRef.result.then(() => {}).catch(() => {});
   }
 
   refresh(): void {

@@ -15,6 +15,7 @@ import { GooglePhotosService } from '../../../services/google-photos.service';
 import { Constant, ConstantType } from '../../../models/constant';
 import { FirestoreConstantsDataService } from '../../../services/firestore-data/firestore-constants-data.service';
 import { GooglePhoto } from '../../../models/googlePhoto';
+import { faRemove } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-create-edit-food',
@@ -23,6 +24,7 @@ import { GooglePhoto } from '../../../models/googlePhoto';
 })
 export class CreateEditFoodComponent {
 
+  faRemove = faRemove;
   Emoji = Emoji;
   form: FormGroup;
   loading = false;
@@ -157,6 +159,13 @@ export class CreateEditFoodComponent {
       };
     };
     myReader.readAsArrayBuffer(file);
+  }
+
+  deletePhoto(): void {
+    this.selectedImage = { photoURL: undefined };
+    if (this.food) {
+      this.food.photoId = undefined;
+    }
   }
 
   initAutocomplete(): void {

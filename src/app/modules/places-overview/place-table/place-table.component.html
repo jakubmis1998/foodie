@@ -52,7 +52,12 @@
           <span class="small text-secondary">Food</span>
         </div>
       </div>
-      <button class="btn btn-primary view-btn" (click)="goToDetails(item)">View details</button>
+      <div class="d-flex justify-content-between mx-3">
+        <button class="btn btn-primary view-btn" (click)="goToDetails(item)">View details</button>
+        <button class="btn btn-primary rounded-circle" [disabled]="!item.photoId" (click)="showThumbnail(item)">
+          <fa-icon class="text-white" [icon]="faEye"></fa-icon>
+        </button>
+      </div>
     </div>
   </div>
 </ng-template>

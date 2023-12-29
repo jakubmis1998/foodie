@@ -13,6 +13,8 @@
     </div>
     <div class="text-center text-secondary">{{ place.address.display_name }}</div>
 
+    <img *ngIf="place.photoId" class="rounded my-3" [src]="photoURL">
+
     <div class="divider text-center text-secondary my-3">Map</div>
     <app-leaflet-map [coords]="place.address"></app-leaflet-map>
 

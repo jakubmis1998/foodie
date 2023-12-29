@@ -13,6 +13,7 @@ import { FirestorePlaceDataService } from '../../services/firestore-data/firesto
 import { FirestoreConstantsDataService } from '../../services/firestore-data/firestore-constants-data.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FirestoreFoodDataService } from '../../services/firestore-data/firestore-food-data.service';
+import { GooglePhotosService } from '../../services/google-photos.service';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { FirestoreFoodDataService } from '../../services/firestore-data/firestor
   providers: [
     FirestorePlaceDataService,
     FirestoreFoodDataService,
-    FirestoreConstantsDataService
+    FirestoreConstantsDataService,
+    GooglePhotosService
   ]
 })
 export class PlacesOverviewModule { }

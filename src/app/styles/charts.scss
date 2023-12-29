@@ -1,0 +1,7 @@
+.dashboard-page highcharts-chart {
+  overflow: visible !important;
+
+  .highcharts-container, svg.highcharts-root {
+    overflow: visible !important;
+  }
+}

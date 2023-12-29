@@ -5,9 +5,10 @@ import { Place } from '../../../models/place';
 import * as Highcharts from 'highcharts';
 import { FirestorePlaceDataService } from '../../../services/firestore-data/firestore-place-data.service';
 import { FirestoreFoodDataService } from '../../../services/firestore-data/firestore-food-data.service';
-import { forkJoin, map } from 'rxjs';
+import { forkJoin, map, of, switchMap, zip } from 'rxjs';
 import { FilterParams, ListParams, PaginationParams, SortingParams } from '../../../models/list-params';
 import { Food } from '../../../models/food';
+import { GooglePhotosService } from '../../../services/google-photos.service';
 
 @Component({
   selector: 'app-place-details',
@@ -23,18 +24,28 @@ export class PlaceDetailsComponent implements OnInit {
   loading = true;
   place: Place;
   foodOfPlace: Food[];
+  photoURL: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private firestorePlaceDataService: FirestorePlaceDataService,
-    private firestoreFoodDataService: FirestoreFoodDataService
+    private firestoreFoodDataService: FirestoreFoodDataService,
+    private googlePhotosService: GooglePhotosService
   ) {}
 
   ngOnInit(): void {
     const placeId = this.activatedRoute.snapshot.paramMap.get('id')!;
     forkJoin([
-      this.firestorePlaceDataService.get(placeId),
+      this.firestorePlaceDataService.get(placeId).pipe(
+        map(place => place as Place),
+        switchMap((place: Place) => {
+          return zip(
+            of(place),
+            place.photoId ? this.googlePhotosService.get(place.photoId).pipe(map(photo => photo.baseUrl)) : of(undefined)
+          )
+        })
+      ),
       this.firestoreFoodDataService.getAll(
         undefined, undefined, new ListParams(
           new SortingParams('createdAt'),
@@ -45,7 +56,8 @@ export class PlaceDetailsComponent implements OnInit {
         map(response => response.items)
       )
     ]).subscribe(result => {
-      this.place = result[0] as Place;
+      this.place = result[0][0] as Place;
+      this.photoURL = result[0][1] as string;
       this.foodOfPlace = result[1] as Food[];
       this.setChartOptions();
       this.loading = false;
